@@ -1,6 +1,6 @@
 const TelegramBot = require('node-telegram-bot-api');
 
-const TOKEN = process.env.BOT_TOKEN; // токен из переменной окружения
+const TOKEN = process.env.TELEGRAM_TOKEN; // токен из переменной окружения
 const bot = new TelegramBot(TOKEN, { polling: true });
 
 // Каталог тарифов
