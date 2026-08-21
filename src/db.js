@@ -15,56 +15,16 @@ db.serialize(() => {
     name TEXT,
     url TEXT,
     expires INTEGER,
-    status TEXT DEFAULT 'active',
-    created_at TEXT
-  )`);
-  db.run(`CREATE TABLE IF NOT EXISTS payments (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    chat_id INTEGER,
-    amount INTEGER,
-    months INTEGER,
-    status TEXT DEFAULT 'pending',
-    created_at TEXT
+    status TEXT DEFAULT 'active'
   )`);
 });
 
 module.exports = {
-  getOrCreateUser(chatId) {
-    return new Promise((resolve, reject) => {
-      db.get('SELECT * FROM users WHERE chat_id=?', [chatId], (e, row) => {
-        if (row) return resolve(row);
-        db.run('INSERT INTO users (chat_id, balance, created_at) VALUES (?,?,?)',
-          [chatId, 0, new Date().toISOString()], (err) => {
-            if (err) return reject(err);
-            resolve({ chat_id: chatId, balance: 0 });
-          });
-      });
-    });
-  },
-  getUser(chatId) {
-    return new Promise((res, rej) => db.get('SELECT * FROM users WHERE chat_id=?', [chatId], (e,r)=> r?res(r):rej(e||'not found')));
-  },
-  addBalance(chatId, amt) {
-    return new Promise((res, rej) => db.run('UPDATE users SET balance=balance+? WHERE chat_id=?', [amt, chatId], e=>e?rej(e):res()));
-  },
-  setBalance(chatId, amt) {
-    return new Promise((res, rej) => db.run('UPDATE users SET balance=? WHERE chat_id=?', [amt, chatId], e=>e?rej(e):res()));
-  },
-  getKeys(chatId) {
-    return new Promise((res, rej) => db.all('SELECT * FROM keys WHERE chat_id=? ORDER BY id', [chatId], (e,r)=>e?rej(e):res(r)));
-  },
-  addKey(chatId, name, url, expires) {
-    return new Promise((res, rej) => db.run('INSERT INTO keys (chat_id,name,url,expires,status,created_at) VALUES (?,?,?,?,?,?)',
-      [chatId,name,url,expires,'active',new Date().toISOString()], function(e){e?rej(e):res(this.lastID);}));
-  },
-  setKeyStatus(id, status) {
-    return new Promise((res, rej) => db.run('UPDATE keys SET status=? WHERE id=?', [status,id], e=>e?rej(e):res()));
-  },
-  allUsers() {
-    return new Promise((res, rej) => db.all('SELECT * FROM users', (e,r)=>e?rej(e):res(r)));
-  },
-  addPayment(chatId, amount, months) {
-    return new Promise((res, rej) => db.run('INSERT INTO payments (chat_id,amount,months,status,created_at) VALUES (?,?,?,?,?)',
-      [chatId,amount,months,'pending',new Date().toISOString()], function(e){e?rej(e):res(this.lastID);}));
-  }
+  getOrCreateUser(cid){return new Promise((res,rej)=>db.get('SELECT * FROM users WHERE chat_id=?',[cid],(e,r)=>{if(r)return res(r);db.run('INSERT INTO users (chat_id,created_at) VALUES (?,?)',[cid,new Date().toISOString()],(er)=>{er?rej(er):res({chat_id:cid,balance:0});});}));},
+  getUser(cid){return new Promise((res,rej)=>db.get('SELECT * FROM users WHERE chat_id=?',[cid],(e,r)=>r?res(r):rej(e||'nf')));},
+  addBalance(cid,a){return new Promise((res,rej)=>db.run('UPDATE users SET balance=balance+? WHERE chat_id=?',[a,cid],e=>e?rej(e):res()));},
+  setBalance(cid,a){return new Promise((res,rej)=>db.run('UPDATE users SET balance=? WHERE chat_id=?',[a,cid],e=>e?rej(e):res()));},
+  getKeys(cid){return new Promise((res,rej)=>db.all('SELECT * FROM keys WHERE chat_id=? ORDER BY id',[cid],(e,r)=>e?rej(e):res(r)));},
+  addKey(cid,name,url,exp){return new Promise((res,rej)=>db.run('INSERT INTO keys (chat_id,name,url,expires,status) VALUES (?,?,?,?,?)',[cid,name,url,exp,'active'],function(e){e?rej(e):res(this.lastID);}));},
+  allUsers(){return new Promise((res,rej)=>db.all('SELECT * FROM users',(e,r)=>e?rej(e):res(r)));}
 };
