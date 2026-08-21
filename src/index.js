@@ -21,7 +21,7 @@ bot.onText(/\/start/, (msg) => {
     {
       reply_markup: {
         inline_keyboard: [
-          [{ text: '🌐 1 месяц — 120₽', callback_data: 'plan_1_месяц' }],
+          [{ text: '🌐 1 месяц — 100₽', callback_data: 'plan_1_месяц' }],
           [{ text: '🌐 3 месяца — 300₽', callback_data: 'plan_3_месяца' }],
           [{ text: '🌐 6 месяцев — 500₽', callback_data: 'plan_6_месяцев' }]
         ]
@@ -77,7 +77,7 @@ bot.on('callback_query', async (query) => {
     await bot.sendMessage(chatId, 'Выберите тариф:', {
       reply_markup: {
         inline_keyboard: [
-          [{ text: '🌐 1 месяц — 120₽', callback_data: 'plan_1_месяц' }],
+          [{ text: '🌐 1 месяц — 100₽', callback_data: 'plan_1_месяц' }],
           [{ text: '🌐 3 месяца — 300₽', callback_data: 'plan_3_месяца' }],
           [{ text: '🌐 6 месяцев — 500₽', callback_data: 'plan_6_месяцев' }]
         ]
