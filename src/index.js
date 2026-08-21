@@ -6,209 +6,204 @@ const bot = new TelegramBot(process.env.BOT_TOKEN, { polling: true });
 const PANEL = process.env.PANEL_URL;
 const ADMIN = Number(process.env.ADMIN_ID);
 
-// ===== Цена за месяц =====
 const MONTH_PRICE = 129;
+const PAY_URL = 'https://yoomoney.ru/quickpay/fundraise?billNumber=1JQ48QFUVAK.260821';
+const SUPPORT_URL = 'https://t.me/flidges';
 
-// ===== Тарифы (авто-рост цены) =====
-function getPlanPrice(months) {
-  return months * MONTH_PRICE;
-}
+// ===== База (в проде - SQLite/PostgreSQL) =====
+const db = {}; // chatId -> { balance, keys: [{name,url,expires,status}] }
 
-// ===== База данных (в проде - SQLite/PostgreSQL) =====
-const db = {}; // chatId -> { balance, keys: [{url, expires}] }
+function priceFor(months) { return months * MONTH_PRICE; }
 
-// ===== Клавиатура выбора месяцев =====
-function monthsKeyboard() {
-  return {
-    inline_keyboard: [
-      [{ text: '1 месяц — 129₽', callback_data: 'buy_1' }],
-      [{ text: '2 месяца — 258₽', callback_data: 'buy_2' }],
-      [{ text: '3 месяца — 387₽', callback_data: 'buy_3' }],
-      [{ text: '6 месяцев — 774₽', callback_data: 'buy_6' }],
-      [{ text: '12 месяцев — 1548₽', callback_data: 'buy_12' }],
-      [{ text: '🔙 В меню', callback_data: 'menu' }]
-    ]
-  };
-}
-
-// ===== Панель пользователя (главный экран) =====
-async function showUserPanel(chatId, msgId) {
+// ===== Панель пользователя =====
+async function showPanel(chatId, msgId) {
   const user = db[chatId] || { balance: 0, keys: [] };
-  const activeKeys = user.keys.filter(k => k.expires > Date.now());
+  const active = user.keys.filter(k => k.status === 'active' && k.expires > Date.now());
+  let firstLeft = '';
+  if (active[0]) firstLeft = ` — ещё ${Math.ceil((active[0].expires-Date.now())/86400000)} дней`;
 
-  let text =
-    `👋 <b>${/* имя пользователя */ 'Добро пожаловать'}</b>\n\n` +
-    `🌐 VPN работает 👌\n` +
-    `🔑 Активных ключей: <b>${activeKeys.length}</b>\n` +
-    `💰 Баланс: <b>${user.balance}₽</b>` +
-    (activeKeys[0] ? ` — ещё ${Math.ceil((activeKeys[0].expires-Date.now())/86400000)} дней` : '') +
-    `\n\n` +
+  const text =
+    `👋 <b>${chatId === ADMIN ? '👑 Администратор' : 'Привет!'}</b>\n\n` +
+    `🌐 <b>VPN работает 👌</b>\n` +
+    `🔑 Активных ключей: <b>${active.length}</b>\n` +
+    `💰 Баланс: <b>${user.balance}₽</b>${firstLeft}\n\n` +
     `📲 <b>Сменил телефон или удалил приложение?</b>\n` +
     `Нажми на нужный ключ ниже или создай новый — пришлём инструкцию заново.`;
 
-  const keyboard = {
+  const kb = {
     inline_keyboard: [
       [{ text: '🛒 Купить / продлить VPN', callback_data: 'buy_menu' }],
-      ...activeKeys.map((k, i) => [
-        { text: `🔑 Ключ ${i+1} (${k.name})`, callback_data: `key_${i}` }
-      ]),
-      [{ text: '➕ Создать новый ключ', callback_data: 'new_key' }],
-      [{ text: '📥 Мои подписки', callback_data: 'my_keys' }],
-      [{ text: '💰 Пополнить баланс', callback_data: 'balance' }],
-      [{ text: '🆘 Поддержка', url: 'https://t.me/your_support' }]
+      ...active.map((k,i)=>[{ text:`🔑 Ключ ${i+1} · ${k.name}`, callback_data:`key_${i}` }]),
+      [{ text:'➕ Создать новый ключ', callback_data:'new_key' }],
+      [{ text:'📥 Мои подписки', callback_data:'my_keys' }],
+      [{ text:'💰 Пополнить баланс', callback_data:'balance' }],
+      [{ text:'❓ Как подключиться', callback_data:'howto' }],
+      [{ text:'🆘 Поддержка', url: SUPPORT_URL }]
     ]
   };
+  if (chatId === ADMIN) kb.inline_keyboard.push([{ text:'⚙️ Админ-панель', callback_data:'admin' }]);
 
-  if (msgId) await bot.editMessageText(text, { chat_id: chatId, message_id: msgId, parse_mode: 'HTML', reply_markup: keyboard });
-  else await bot.sendMessage(chatId, text, { parse_mode: 'HTML', reply_markup: keyboard });
+  if (msgId) return bot.editMessageText(text,{chat_id:chatId,message_id:msgId,parse_mode:'HTML',reply_markup:kb});
+  return bot.sendMessage(chatId,text,{parse_mode:'HTML',reply_markup:kb});
 }
 
-// ===== /start =====
-bot.onText(/\/start/, async (msg) => {
-  const chatId = msg.chat.id;
-  if (!db[chatId]) db[chatId] = { balance: 0, keys: [] };
-  await showUserPanel(chatId);
+// ===== Тарифы =====
+const monthsKB = () => ({
+  inline_keyboard:[
+    [{text:'1 мес · 129₽',callback_data:'buy_1'}],
+    [{text:'2 мес · 258₽',callback_data:'buy_2'}],
+    [{text:'3 мес · 387₽',callback_data:'buy_3'}],
+    [{text:'6 мес · 774₽',callback_data:'buy_6'}],
+    [{text:'12 мес · 1548₽',callback_data:'buy_12'}],
+    [{text:'🔙 Назад',callback_data:'menu'}]
+  ]
 });
 
-// ===== /menu =====
-bot.onText(/\/menu/, (msg) => showUserPanel(msg.chat.id));
+// ===== /start =====
+bot.onText(/\/start/, async (msg)=>{ if(!db[msg.chat.id]) db[msg.chat.id]={balance:0,keys:[]}; showPanel(msg.chat.id); });
+bot.onText(/\/menu/, (msg)=>showPanel(msg.chat.id));
 
 // ===== Callback =====
-bot.on('callback_query', async (query) => {
-  const chatId = query.message.chat.id;
-  const msgId = query.message.message_id;
-  const data = query.data;
+bot.on('callback_query', async (q)=>{
+  const c=q.message.chat.id, m=q.message.message_id, d=q.data;
+  if(!db[c]) db[c]={balance:0,keys:[]};
+  const u=db[c];
 
-  if (!db[chatId]) db[chatId] = { balance: 0, keys: [] };
-  const user = db[chatId];
+  if(d==='menu') return showPanel(c,m);
+  if(d==='buy_menu') return bot.editMessageText(
+    '🛒 <b>Выберите на сколько месяцев:</b>\n\nКаждый месяц +129₽',
+    {chat_id:c,message_id:m,parse_mode:'HTML',reply_markup:monthsKB()});
 
-  // Меню
-  if (data === 'menu') return showUserPanel(chatId, msgId);
-
-  // Меню покупки
-  if (data === 'buy_menu') {
-    await bot.answerCallbackQuery(query.id);
+  if(d.startsWith('buy_')){
+    const mo=+d.replace('buy_',''), pr=priceFor(mo);
+    await bot.answerCallbackQuery(q.id);
     return bot.editMessageText(
-      '🛒 <b>Выберите на сколько месяцев хотите VPN:</b>\n\n' +
-      'Каждый месяц = +129₽',
-      { chat_id: chatId, message_id: msgId, parse_mode: 'HTML', reply_markup: monthsKeyboard() }
-    );
+      `🛒 <b>${mo} мес. — ${pr}₽</b>\n\n`+
+      `💳 Оплатите <b>${pr}₽</b> по кнопке ниже, затем нажмите «Я оплатил».\n\n`+
+      `📌 Ключ создастся автоматически после подтверждения.`,
+      {chat_id:c,message_id:m,parse_mode:'HTML',reply_markup:{
+        inline_keyboard:[
+          [{text:'💳 Оплатить',url:PAY_URL}],
+          [{text:'✅ Я оплатил',callback_data:`paid_${mo}`}],
+          [{text:'🔙 Назад',callback_data:'buy_menu'}]
+        ]}});
   }
 
-  // Покупка
-  if (data.startsWith('buy_')) {
-    const months = Number(data.replace('buy_', ''));
-    const price = getPlanPrice(months);
-    await bot.answerCallbackQuery(query.id);
-    return bot.editMessageText(
-      `🛒 <b>Тариф: ${months} мес. — ${price}₽</b>\n\n` +
-      `💳 Оплата на карту: переведите <b>${price}₽</b>\n` +
-      `по ссылке ниже, затем нажмите «Я оплатил».\n\n` +
-      `📌 После оплаты ключ создастся автоматически.`,
-      {
-        chat_id: chatId, message_id: msgId, parse_mode: 'HTML',
-        reply_markup: {
-          inline_keyboard: [
-            [{ text: '💳 Оплатить', url: 'https://yoomoney.ru/to/ВАШ_КОШЕЛЕК' }],
-            [{ text: '✅ Я оплатил', callback_data: `paid_${months}` }],
-            [{ text: '🔙 Назад', callback_data: 'buy_menu' }]
-          ]
-        }
-      }
-    );
+  if(d.startsWith('paid_')){
+    const mo=+d.replace('paid_',''), pr=priceFor(mo);
+    await bot.answerCallbackQuery(q.id,{text:'⏳ Создаю ключ...'});
+    try{
+      const uname=`u${c}_${Date.now().toString().slice(-6)}`;
+      const days=mo*30;
+      const {data}=await axios.post(`${PANEL}/api/clients`,{username:uname,days,trafficLimitBytes:0,deviceLimit:0,activateImmediately:true},{headers:{'x-api-token':process.env.API_TOKEN}});
+      const subUrl=`${PANEL}/sub/${data.uuid}`;
+      u.keys.push({name:`${mo} мес`,url:subUrl,expires:Date.now()+days*86400000,status:'active'});
+      await bot.sendMessage(c,
+        `✅ <b>Оплата получена! Ваш ключ готов</b>\n\n`+
+        `📅 <b>${mo} мес. (${days} дн.)</b>\n\n`+
+        `📥 <b>Подписка:</b>\n<code>${subUrl}</code>\n\n`+
+        `🗝 Вставьте в <b>HAPP</b>/<b>v2rayTun</b> как «Подписку».`,
+        {parse_mode:'HTML'});
+      showPanel(c);
+    }catch(e){console.error(e);bot.sendMessage(c,'❌ Ошибка создания ключа. Напишите поддержке.');}
   }
 
-  // Подтверждение оплаты
-  if (data.startsWith('paid_')) {
-    const months = Number(data.replace('paid_', ''));
-    const price = getPlanPrice(months);
-
-    await bot.answerCallbackQuery(query.id, { text: '⏳ Проверяю и создаю ключ...' });
-
-    // Здесь должна быть реальная проверка оплаты!
-    // Пока имитируем успех и выдаём ключ
-    try {
-      const username = `u${chatId}_${Date.now().toString().slice(-6)}`;
-      const days = months * 30;
-
-      // Создание клиента в панели Remnawave
-      const { data } = await axios.post(`${PANEL}/api/clients`, {
-        username, days, trafficLimitBytes: 0, deviceLimit: 0, activateImmediately: true
-      }, { headers: { 'x-api-token': process.env.API_TOKEN } });
-
-      const subUrl = `${PANEL}/sub/${data.uuid}`;
-
-      user.keys.push({ name: `${months} мес`, url: subUrl, expires: Date.now() + days*86400000 });
-
-      await bot.sendMessage(chatId,
-        '✅ <b>Оплата получена! Ваш ключ готов</b>\n\n' +
-        `📅 <b>${months} мес. (${days} дней)</b>\n\n` +
-        `📥 <b>Подписка:</b>\n<code>${subUrl}</code>\n\n` +
-        '🗝 Вставьте в приложение <b>HAPP</b> или <b>v2rayTun</b> как «Подписку».\n\n' +
-        '💡 В главном меню вы всегда сможете вернуть свой ключ.',
-        { parse_mode: 'HTML' }
-      );
-      await showUserPanel(chatId);
-    } catch (e) {
-      console.error(e);
-      await bot.sendMessage(chatId, '❌ Ошибка при создании ключа. Напишите поддержке.');
-    }
+  if(d.startsWith('key_')){
+    const i=+d.replace('key_',''); const k=u.keys[i];
+    if(!k) return bot.answerCallbackQuery(q.id,{text:'Ключ не найден'});
+    await bot.answerCallbackQuery(q.id);
+    bot.sendMessage(c,
+      `🔑 <b>Ключ ${i+1} (${k.name})</b>\n\n`+
+      `📥 <b>Подписка:</b>\n<code>${k.url}</code>\n\n`+
+      `📅 Истекает: ${new Date(k.expires).toLocaleDateString()}\n`+
+      `📌 Статус: ${k.status}\n\n`+
+      'Вставьте в HAPP / v2rayTun как «Подписку».',{parse_mode:'HTML'});
   }
 
-  // Показать конкретный ключ
-  if (data.startsWith('key_')) {
-    const idx = Number(data.replace('key_', ''));
-    const key = user.keys[idx];
-    if (!key) return bot.answerCallbackQuery(query.id, { text: 'Ключ не найден' });
-    await bot.answerCallbackQuery(query.id);
-    await bot.sendMessage(chatId,
-      `🔑 <b>Ключ ${idx+1} (${key.name})</b>\n\n` +
-      `📥 <b>Подписка:</b>\n<code>${key.url}</code>\n\n` +
-      `📅 Истекает: ${new Date(key.expires).toLocaleDateString()}\n\n` +
-      'Вставьте в HAPP / v2rayTun как «Подписку».',
-      { parse_mode: 'HTML' }
-    );
+  if(d==='my_keys'){
+    await bot.answerCallbackQuery(q.id);
+    if(!u.keys.length) return bot.sendMessage(c,'У вас пока нет ключей. Купите тариф!');
+    let t='📥 <b>Ваши подписки:</b>\n\n';
+    u.keys.forEach((k,i)=>t+=`${i+1}. ${k.name} · ${k.status}\n<code>${k.url}</code>\n\n`);
+    bot.sendMessage(c,t,{parse_mode:'HTML'});
   }
 
-  // Мои подписки
-  if (data === 'my_keys') {
-    await bot.answerCallbackQuery(query.id);
-    if (user.keys.length === 0) {
-      return bot.sendMessage(chatId, 'У вас пока нет ключей. Купите тариф!');
-    }
-    let txt = '📥 <b>Ваши подписки:</b>\n\n';
-    user.keys.forEach((k, i) => {
-      txt += `${i+1}. ${k.name}\n<code>${k.url}</code>\n\n`;
-    });
-    await bot.sendMessage(chatId, txt, { parse_mode: 'HTML' });
+  if(d==='balance'){
+    await bot.answerCallbackQuery(q.id);
+    bot.sendMessage(c,`💰 <b>Баланс: ${u.balance}₽</b>\n\nПополнение через поддержку.`,{parse_mode:'HTML'});
   }
 
-  // Баланс
-  if (data === 'balance') {
-    await bot.answerCallbackQuery(query.id);
-    await bot.sendMessage(chatId,
-      `💰 <b>Баланс: ${user.balance}₽</b>\n\n` +
-      'Пополнение через поддержку или перевод на карту.',
-      { parse_mode: 'HTML' }
-    );
+  if(d==='howto'){
+    await bot.answerCallbackQuery(q.id);
+    bot.sendMessage(c,
+      '❓ <b>Как подключиться:</b>\n\n'+
+      '1️⃣ Скачайте приложение <b>HAPP</b> или <b>v2rayTun</b>\n'+
+      '2️⃣ Нажмите «Добавить подписку»\n'+
+      '3️⃣ Вставьте свою ссылку-подписку\n'+
+      '4️⃣ Подключитесь и пользуйтесь 👌',{parse_mode:'HTML'});
+  }
+
+  if(d==='new_key'){
+    await bot.answerCallbackQuery(q.id);
+    bot.sendMessage(c,'Чтобы создать новый ключ — купите тариф 🛒',{reply_markup:{inline_keyboard:[[{text:'🛒 Купить',callback_data:'buy_menu'}]]}});
+  }
+
+  // ===== АДМИН ПАНЕЛЬ =====
+  if(d==='admin'){
+    if(c!==ADMIN) return;
+    await bot.answerCallbackQuery(q.id);
+    bot.sendMessage(c,'⚙️ <b>Админ-панель</b>',{parse_mode:'HTML',reply_markup:{
+      inline_keyboard:[
+        [{text:'📊 Статистика',callback_data:'ad_stats'}],
+        [{text:'💳 Выдать баланс',callback_data:'ad_add'}],
+        [{text:'🔻 Забрать баланс',callback_data:'ad_remove'}],
+        [{text:'🔑 Выдать ключ',callback_data:'ad_givekey'}],
+        [{text:'👥 Список юзеров',callback_data:'ad_users'}],
+        [{text:'🔙 Назад',callback_data:'menu'}]
+      ]}});
+  }
+
+  if(d==='ad_stats'){
+    if(c!==ADMIN)return;
+    const total=Object.keys(db).length;
+    const active=Object.values(db).reduce((a,u)=>a+u.keys.filter(k=>k.status==='active'&&k.expires>Date.now()).length,0);
+    await bot.answerCallbackQuery(q.id);
+    bot.sendMessage(c,`📊 <b>Статистика</b>\n\n👥 Пользователей: ${total}\n🔑 Активных ключей: ${active}`,{parse_mode:'HTML'});
   }
 });
 
-// ===== Админ: пополнение баланса /add <id> <сумма> =====
-bot.onText(/\/add (\d+) (\d+)/, async (msg, match) => {
-  if (msg.chat.id !== ADMIN) return;
-  const [, userId, amount] = match;
-  if (!db[userId]) db[userId] = { balance: 0, keys: [] };
-  db[userId].balance += Number(amount);
-  await bot.sendMessage(msg.chat.id, `✅ Баланс ${userId}: ${db[userId].balance}₽`);
+// ===== Админ команды через текст =====
+bot.onText(/\/add (\d+) (\d+)/,async(msg,match)=>{
+  if(msg.chat.id!==ADMIN)return;
+  const[,id,amount]=match;
+  if(!db[id])db[id]={balance:0,keys:[]};
+  db[id].balance+=+amount;
+  bot.sendMessage(msg.chat.id,`✅ Выдано ${amount}₽ юзеру ${id}. Баланс: ${db[id].balance}₽`);
 });
-
-// ===== Админ: статистика =====
-bot.onText(/\/stats/, async (msg) => {
-  if (msg.chat.id !== ADMIN) return;
-  const totalUsers = Object.keys(db).length;
-  const activeKeys = Object.values(db).reduce((a,u) => a + u.keys.filter(k=>k.expires>Date.now()).length, 0);
-  await bot.sendMessage(msg.chat.id, `📊 Всего пользователей: ${totalUsers}\n🔑 Активных ключей: ${activeKeys}`);
+bot.onText(/\/remove (\d+) (\d+)/,async(msg,match)=>{
+  if(msg.chat.id!==ADMIN)return;
+  const[,id,amount]=match;
+  if(!db[id])db[id]={balance:0,keys:[]};
+  db[id].balance=Math.max(0,db[id].balance-+amount);
+  bot.sendMessage(msg.chat.id,`🔻 У юзера ${id} баланс: ${db[id].balance}₽`);
+});
+bot.onText(/\/givekey (\d+) (\d+)/,async(msg,match)=>{
+  if(msg.chat.id!==ADMIN)return;
+  const[,id,days]=match;
+  if(!db[id])db[id]={balance:0,keys:[]};
+  const uname=`admin_${Date.now().toString().slice(-6)}`;
+  try{
+    const {data}=await axios.post(`${PANEL}/api/clients`,{username:uname,days:+days,trafficLimitBytes:0,deviceLimit:0,activateImmediately:true},{headers:{'x-api-token':process.env.API_TOKEN}});
+    const sub=`${PANEL}/sub/${data.uuid}`;
+    db[id].keys.push({name:`выданный`,url:sub,expires:Date.now()+(+days)*86400000,status:'active'});
+    bot.sendMessage(msg.chat.id,`🔑 Ключ выдан юзеру ${id} на ${days} дн.\n<code>${sub}</code>`,{parse_mode:'HTML'});
+  }catch(e){bot.sendMessage(msg.chat.id,'❌ Ошибка: '+e.message);}
+});
+bot.onText(/\/stats/,async(msg)=>{
+  if(msg.chat.id!==ADMIN)return;
+  const total=Object.keys(db).length;
+  const active=Object.values(db).reduce((a,u)=>a+u.keys.filter(k=>k.status==='active'&&k.expires>Date.now()).length,0);
+  bot.sendMessage(msg.chat.id,`📊 Пользователей: ${total}\n🔑 Активных ключей: ${active}`);
 });
 
 console.log('🔥 Awesome VPN Bot запущен!');
