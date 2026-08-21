@@ -1,9 +1,13 @@
 {
   "name": "awesome-vpn-bot",
-  "version": "1.0.0",
+  "version": "2.0.0",
+  "description": "Awesome VPN - продажа и выдача VPN-ключей автоматически",
   "main": "src/index.js",
   "scripts": { "start": "node src/index.js" },
   "dependencies": {
-    "node-telegram-bot-api": "^0.64.0"
+    "node-telegram-bot-api": "^0.64.0",
+    "axios": "^1.7.0",
+    "sqlite3": "^5.1.7",
+    "dotenv": "^16.4.0"
   }
 }
