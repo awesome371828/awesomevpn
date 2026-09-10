@@ -33,7 +33,7 @@ def countries_html():
         ("🇫🇷","Франция"),("🇸🇪","Швеция")]
     out = ""
     for fl, nm in items:
-        out += '<div class="country"><span class="fl">'+fl+'</span><span class="nm">'+nm+'</span><span class="dot on"></span></div>'
+        out += '<div class="country"><span class="fl">'+fl+'</span><span class="nm">'+nm+'</span><span class="dot"></span></div>'
     return out
 
 def apps_html():
@@ -64,75 +64,77 @@ def guarantee_html():
     return out
 
 HEAD = """<style>
-:root{--bg:#070818;--card:#12142e;--line:#262c52;--txt:#eef1ff;--mut:#9aa1cc;
---gr1:#7c5cff;--gr2:#22d3ee;--ok:#22e58f}
+:root{--bg:#0a0c1e;--card:#121430;--line:#2a2f56;--txt:#f0f2ff;--mut:#9ba2cf;
+--gr1:#7c5cff;--gr2:#22d3ee;--ok:#25e08a}
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{background:var(--bg);color:var(--txt);font-family:Arial,Helvetica,sans-serif;overflow-x:hidden}
+/* анимированный градиентный фон (без наложений) */
+body{color:var(--txt);font-family:Arial,Helvetica,sans-serif;overflow-x:hidden;
+background:linear-gradient(120deg,#0a0c1e,#131a3a,#0d1026,#1a1033,#0a0c1e);
+background-size:400% 400%;animation:bgMove 20s ease infinite}
+@keyframes bgMove{50%{background-position:100% 50%}}
 a{color:inherit;text-decoration:none}
-.wrap{max-width:1180px;margin:0 auto;padding:0 22px;position:relative;z-index:2}
-
-/* мягкий фон */
-.scene{position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none;background:#070818}
-.g{position:absolute;border-radius:50%;filter:blur(100px);opacity:.5}
-.g1{width:600px;height:600px;background:#4b36d6;top:-160px;left:-140px}
-.g2{width:520px;height:520px;background:#0e7490;top:25%;right:-180px}
-.g3{width:480px;height:480px;background:#4a1d3d;bottom:-140px;left:30%}
+.wrap{max-width:1160px;margin:0 auto;padding:0 22px}
 
 /* nav */
-nav{position:sticky;top:0;z-index:50;background:#0a0c20;border-bottom:1px solid var(--line)}
-.nav-in{display:flex;align-items:center;gap:22px;padding:15px 22px;max-width:1180px;margin:0 auto}
+nav{position:sticky;top:0;z-index:50;background:#0a0c1e;border-bottom:1px solid var(--line)}
+.nav-in{display:flex;align-items:center;gap:22px;padding:15px 22px;max-width:1160px;margin:0 auto}
 .logo{display:flex;align-items:center;gap:11px;font-weight:800;font-size:20px}
-.logo-badge{width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,var(--gr1),var(--gr2));display:flex;align-items:center;justify-content:center;box-shadow:0 0 18px #7c5cff66}
+.logo-badge{width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,var(--gr1),var(--gr2));display:flex;align-items:center;justify-content:center;box-shadow:0 0 18px #7c5cff66;animation:pulse 2.5s infinite}
 .logo-badge span{background:#0a0c1e;border-radius:9px;width:30px;height:30px;display:flex;align-items:center;justify-content:center;font-size:17px}
+@keyframes pulse{50%{box-shadow:0 0 34px #22d3ee88}}
 .menu{display:flex;gap:20px;margin-left:auto}
 .menu a{color:var(--mut);font-size:14.5px;transition:.2s}
 .menu a:hover{color:#fff}
 @media(max-width:760px){.menu{display:none}}
 
-h2{font-size:clamp(26px,4vw,38px);font-weight:800;margin-bottom:10px;color:#fff}
+h2{font-size:clamp(26px,4vw,38px);font-weight:800;margin-bottom:12px;color:#fff}
 .hl{color:var(--gr2)}
-.sub{color:var(--mut);max-width:640px;margin:0 auto 34px;font-size:16px}
-section{padding:70px 0;position:relative;z-index:2}
+.sub{color:var(--mut);max-width:640px;margin:0 auto 36px;font-size:16px}
+section{padding:72px 0}
 .center{text-align:center}
 
 /* hero */
-.hero{padding:96px 0 78px}
-.hero h1{font-size:clamp(36px,6vw,60px);font-weight:900;line-height:1.08;margin-bottom:22px;color:#fff}
-.hero p{color:var(--mut);font-size:19px;max-width:620px;margin:0 auto 30px}
+.hero{padding:100px 0 80px}
+.hero h1{font-size:clamp(36px,6vw,62px);font-weight:900;line-height:1.08;margin-bottom:22px;color:#fff}
+.hero p{color:var(--mut);font-size:19px;max-width:620px;margin:0 auto 32px}
 .hero-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
-.cta{display:inline-flex;align-items:center;gap:10px;padding:16px 36px;border-radius:16px;background:linear-gradient(90deg,var(--gr1),var(--gr2));font-weight:800;font-size:17px;box-shadow:0 0 26px #7c5cff55;transition:.25s;cursor:pointer;border:none;color:#fff}
-.cta:hover{transform:translateY(-3px);box-shadow:0 0 40px #22d3ee88}
-.cta.ghost{background:transparent;border:1px solid var(--line);box-shadow:none}
+.cta{display:inline-flex;align-items:center;gap:10px;padding:16px 36px;border-radius:16px;background:linear-gradient(90deg,var(--gr1),var(--gr2));font-weight:800;font-size:17px;box-shadow:0 0 26px #7c5cff66;transition:.25s;cursor:pointer;border:none;color:#fff}
+.cta:hover{transform:translateY(-4px) scale(1.03);box-shadow:0 0 44px #22d3ee99}
+.cta.ghost{background:transparent;border:1px solid var(--line)}
 .cta.ghost:hover{border-color:var(--gr2)}
-.pill{display:inline-flex;gap:8px;align-items:center;padding:9px 18px;border-radius:999px;border:1px solid var(--line);background:#0a0c1fd9;color:var(--mut);font-size:13.5px;margin-bottom:24px}
+.pill{display:inline-flex;gap:8px;align-items:center;padding:9px 18px;border-radius:999px;border:1px solid var(--line);background:#121430cc;color:var(--mut);font-size:13.5px;margin-bottom:24px}
 .pill b{color:var(--ok)}
 
 .grid{display:grid;gap:18px}
 .g3{grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
 .g4{grid-template-columns:repeat(auto-fit,minmax(170px,1fr))}
-.card{background:var(--card);border:1px solid var(--line);border-radius:24px;padding:26px;transition:.25s}
-.card:hover{transform:translateY(-5px);border-color:#3a4380;box-shadow:0 16px 44px #0008}
-.card .k{font-size:36px;margin-bottom:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:24px;padding:26px;transition:.3s}
+.card:hover{transform:translateY(-6px) scale(1.02);border-color:#454f96;box-shadow:0 18px 48px #0008}
+.card .k{font-size:38px;margin-bottom:14px;display:inline-block;transition:.3s}
+.card:hover .k{transform:scale(1.15)}
 .card h3{font-size:18px;margin-bottom:8px;color:#fff}
 .card p{color:var(--mut);font-size:14px;line-height:1.5}
+
 .country{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px 14px;transition:.25s}
-.country:hover{border-color:#3a4380}
+.country:hover{transform:translateY(-3px);border-color:#454f96}
 .country .fl{font-size:26px}
 .country .nm{font-weight:700;font-size:14px;color:#fff}
-.dot{width:9px;height:9px;border-radius:50%;margin-left:auto;background:var(--ok);box-shadow:0 0 8px var(--ok)}
+.dot{width:9px;height:9px;border-radius:50%;margin-left:auto;background:var(--ok);box-shadow:0 0 8px var(--ok);animation:blink 2s infinite}
+@keyframes blink{50%{opacity:.35}}
 
-.plan{position:relative;background:var(--card);border:1px solid var(--line);border-radius:26px;padding:30px 28px;text-align:center;transition:.25s}
-.plan:hover{transform:translateY(-6px);box-shadow:0 20px 50px #000a}
+/* plans */
+.plan{background:var(--card);border:1px solid var(--line);border-radius:26px;padding:26px 28px 30px;text-align:center;transition:.3s}
+.plan:hover{transform:translateY(-8px) scale(1.02);box-shadow:0 22px 55px #000a}
 .plan.hot{border:1px solid var(--gr1)}
-.plan .badge{position:absolute;top:-13px;left:50%;transform:translateX(-50%);background:linear-gradient(90deg,var(--gr1),var(--gr2));padding:6px 16px;border-radius:999px;font-size:12px;font-weight:800;white-space:nowrap;color:#fff}
-.plan .price{font-size:42px;font-weight:900;margin:18px 0 4px;color:#fff}
+.plan .badge{display:inline-block;background:linear-gradient(90deg,var(--gr1),var(--gr2));padding:5px 16px;border-radius:999px;font-size:12px;font-weight:800;color:#fff;margin-bottom:14px}
+.plan .price{font-size:42px;font-weight:900;margin:14px 0 4px;color:#fff}
 .plan .stars{color:var(--gr2);font-size:17px;font-weight:700;margin-bottom:14px}
-.plan ul{list-style:none;text-align:left;color:var(--mut);font-size:14px;display:flex;flex-direction:column;gap:10px;margin:20px 0}
+.plan ul{list-style:none;text-align:left;color:var(--mut);font-size:14px;display:flex;flex-direction:column;gap:10px;margin:18px 0}
 .plan li::before{content:'✓ ';color:var(--ok);font-weight:800}
 .btn{display:block;width:100%;padding:15px;border-radius:16px;border:none;cursor:pointer;font-weight:800;font-size:15px;color:#fff;background:linear-gradient(90deg,var(--gr1),var(--gr2));transition:.25s}
-.btn:hover{transform:translateY(-3px);box-shadow:0 0 26px #7c5cff88}
-.switch{display:inline-flex;gap:4px;background:#0a0c1fd9;border:1px solid var(--line);border-radius:999px;padding:5px;margin-bottom:32px}
+.btn:hover{transform:translateY(-3px);box-shadow:0 0 28px #7c5cff88}
+.switch{display:inline-flex;gap:4px;background:#121430cc;border:1px solid var(--line);border-radius:999px;padding:5px;margin-bottom:32px}
 .switch button{padding:10px 24px;border-radius:999px;border:none;background:transparent;color:var(--mut);font-weight:700;cursor:pointer;font-size:14px;transition:.25s}
 .switch button.on{background:linear-gradient(90deg,var(--gr1),var(--gr2));color:#fff}
 
@@ -146,12 +148,14 @@ section{padding:70px 0;position:relative;z-index:2}
 .review .who{font-size:13px;font-weight:700;color:#fff}
 
 .step{text-align:center}
-.step .n{width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,var(--gr1),var(--gr2));display:flex;align-items:center;justify-content:center;font-size:23px;font-weight:900;margin:0 auto 16px;color:#fff;box-shadow:0 0 22px #7c5cff55}
+.step .n{width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,var(--gr1),var(--gr2));display:flex;align-items:center;justify-content:center;font-size:23px;font-weight:900;margin:0 auto 16px;color:#fff;box-shadow:0 0 22px #7c5cff66;animation:stepPulse 3s infinite}
+@keyframes stepPulse{50%{box-shadow:0 0 40px #22d3ee88}}
+
 .calc{max-width:560px;margin:0 auto;background:var(--card);border:1px solid var(--line);border-radius:24px;padding:32px;text-align:center}
 input[type=range]{width:100%;accent-color:var(--gr1);margin:20px 0;height:6px}
 .calc-res{font-size:28px;font-weight:900;margin-top:12px;color:#fff}
 .calc .save{color:var(--ok);font-weight:800}
-.counter{font-size:56px;font-weight:900;color:var(--gr2)}
+.counter{font-size:58px;font-weight:900;color:var(--gr2)}
 .faq{max-width:720px;margin:0 auto}
 .faq-item{background:var(--card);border:1px solid var(--line);border-radius:16px;margin-bottom:12px;overflow:hidden}
 .faq-q{display:flex;justify-content:space-between;align-items:center;padding:18px 22px;cursor:pointer;font-weight:700;color:#fff}
@@ -159,12 +163,11 @@ input[type=range]{width:100%;accent-color:var(--gr1);margin:20px 0;height:6px}
 .faq-a{max-height:0;overflow:hidden;transition:max-height .35s;padding:0 22px;color:var(--mut);font-size:14.5px;line-height:1.6}
 .faq-item.open .faq-a{max-height:300px;padding-bottom:18px}
 .faq-item.open .ar{transform:rotate(180deg)}
-footer{background:#0a0c20;border-top:1px solid var(--line);padding:40px 0;position:relative;z-index:2}
-.foot{display:flex;flex-wrap:wrap;gap:20px;justify-content:space-between;align-items:center;max-width:1180px;margin:0 auto;padding:0 22px}
+
+footer{background:#0a0c1e;border-top:1px solid var(--line);padding:40px 0}
+.foot{display:flex;flex-wrap:wrap;gap:20px;justify-content:space-between;align-items:center;max-width:1160px;margin:0 auto;padding:0 22px}
 .foot a{color:var(--mut);font-size:14px;transition:.2s}
 .foot a:hover{color:#fff}
-.news-tick{overflow:hidden;border-top:1px solid var(--line);background:#0a0c20;padding:10px 0;position:relative;z-index:2}
-.news-track{display:flex;gap:50px;width:max-content;animation:mq 22s linear infinite;color:var(--mut);font-size:13.5px}
 .doc{max-width:760px;margin:0 auto}
 .doc h1{font-size:32px;margin-bottom:18px;color:#fff}
 .doc p{margin:12px 0;color:var(--mut);line-height:1.7}
@@ -177,7 +180,6 @@ def DOC(title, body_key):
     return R("""<!DOCTYPE html><html lang="ru"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>"""+title+""" — __SITE__</title></head><body>
-<div class="scene"><div class="g g1"></div><div class="g g2"></div><div class="g g3"></div></div>
 <nav><div class="nav-in"><a class="logo" href="/"><div class="logo-badge"><span>🛡</span></div>__SITE__</a>
 <div class="menu"><a href="/">Главная</a></div></div></nav>
 <section><div class="wrap doc"><a class="back" href="/">← Вернуться на главную</a>
@@ -218,7 +220,6 @@ def index_html():
     return R("""<!DOCTYPE html><html lang="ru"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>__SITE__ — защита за 1 минуту</title>"""+HEAD+"""</head><body>
-<div class="scene"><div class="g g1"></div><div class="g g2"></div><div class="g g3"></div></div>
 <nav><div class="nav-in"><a class="logo" href="/"><div class="logo-badge"><span>🛡</span></div>__SITE__</a>
 <div class="menu"><a href="#features">Возможности</a><a href="#countries">Страны</a><a href="#plans">Тарифы</a><a href="#faq">FAQ</a></div></div></nav>
 
@@ -280,13 +281,13 @@ def index_html():
 <h2>Тарифы</h2><p class="sub">Гибкие тарифы для любого количества устройств</p>
 <div class="switch"><button data-cur="rub" class="on" onclick="setCur('rub')">₽ рубли</button><button data-cur="star" onclick="setCur('star')">⭐ звёзды</button></div>
 <div class="grid g3">
-<div class="plan"><div class="badge">Популярный</div>
+<div class="plan"><span class="badge">Популярный</span>
 <h3>1 месяц</h3><div class="price" data-r="139" data-s="98">139₽</div><div class="stars" data-r="139₽" data-s="98⭐">или 98⭐</div>
 <ul><li>3 устройства</li><li>8 стран</li><li>Без логов</li><li>Поддержка 24/7</li></ul><a class="btn" href="__BOT__">Купить</a></div>
-<div class="plan hot"><div class="badge">Выгодно</div>
+<div class="plan hot"><span class="badge">Выгодно</span>
 <h3>3 месяца</h3><div class="price" data-r="249" data-s="175">249₽</div><div class="stars" data-r="249₽" data-s="175⭐">или 175⭐</div>
 <ul><li>3 устройства</li><li>8 стран</li><li>Без логов</li><li>Поддержка 24/7</li><li>−40% выгода</li></ul><a class="btn" href="__BOT__">Купить</a></div>
-<div class="plan"><div class="badge">Максимум</div>
+<div class="plan"><span class="badge">Максимум</span>
 <h3>6 месяцев</h3><div class="price" data-r="519" data-s="364">519₽</div><div class="stars" data-r="519₽" data-s="364⭐">или 364⭐</div>
 <ul><li>5 устройств</li><li>8 стран</li><li>Без логов</li><li>Поддержка 24/7</li><li>−38% выгода</li></ul><a class="btn" href="__BOT__">Купить</a></div>
 </div></div></section>
@@ -323,10 +324,6 @@ def index_html():
 <div class="counter" id="counter">0</div>
 <p class="sub">человек уже используют __SITE__</p>
 <div style="margin-top:22px"><a class="cta" href="__BOT__">Подключиться за 1 минуту</a></div></div></section>
-
-<div class="news-tick"><div class="news-track" id="news">
-<span>🌍 Добавлены новые серверы в Швеции</span><span>⚡ Скорость увеличена на 30%</span><span>🎁 Акция −30% до конца дня</span>
-<span>🛡 Обновлено шифрование</span><span>📱 Поддержка Android TV</span></div></div>
 
 <footer><div class="foot"><span>© __SITE__</span>
 <a href="/terms">Условия</a><a href="/privacy">Конфиденциальность</a><a href="/refund">Возврат</a>
