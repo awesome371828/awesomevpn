@@ -1,2 +1,3 @@
 # No external dependencies - uses Python stdlib
 Flask
+gunicorn
