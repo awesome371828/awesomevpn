@@ -12,7 +12,6 @@ SITE_URL = "awesomevpn.relaxdev.ru"
 OPERATOR = "AWESOME VPN LTE"
 OP_COUNTRY = "Germany"
 BOT_USERNAME = "awesomeproxyvpn_bot"
-BOT_ID = "8878874415"
 # ================================================
 
 def R(t):
@@ -25,7 +24,6 @@ def R(t):
         .replace("__OPERATOR__", OPERATOR)
         .replace("__OPC__", OP_COUNTRY)
         .replace("__BOTU__", BOT_USERNAME)
-        .replace("__BOTID__", BOT_ID)
     )
 
 def countries_html():
@@ -66,7 +64,7 @@ def guarantee_html():
     return out
 
 HEAD = """<style>
-:root{--bg:#08091a;--card:#11132b;--line:#232a4d;--txt:#eef1ff;--mut:#98a0c8;
+:root{--bg:#070818;--card:#11132b;--line:#232a4d;--txt:#eef1ff;--mut:#98a0c8;
 --gr1:#7c5cff;--gr2:#22d3ee;--gr3:#ff5c8a;--ok:#22e58f;--off:#ff4d6d}
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
@@ -74,15 +72,21 @@ body{background:var(--bg);color:var(--txt);font-family:'Segoe UI',system-ui,-app
 a{color:inherit;text-decoration:none}
 .wrap{max-width:1180px;margin:0 auto;padding:0 22px;position:relative;z-index:2}
 
-/* мягкий фон без «коробок» */
-.scene{position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none;background:var(--bg)}
-.g{position:absolute;border-radius:50%;filter:blur(120px);opacity:.28}
-.g1{width:600px;height:600px;background:#4b36d6;top:-160px;left:-140px}
-.g2{width:540px;height:540px;background:#126e8f;top:25%;right:-160px}
-.g3{width:500px;height:500px;background:#8f2250;bottom:-140px;left:30%}
+/* ---- живой анимированный фон ---- */
+.scene{position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none;background:radial-gradient(120% 90% at 50% 0%,#141738 0%,#070818 60%)}
+.g{position:absolute;border-radius:50%;filter:blur(100px)}
+.g1{width:640px;height:640px;background:#4b36d6;top:-180px;left:-160px;animation:float1 18s ease-in-out infinite}
+.g2{width:560px;height:560px;background:#0e7490;top:22%;right:-180px;animation:float2 22s ease-in-out infinite}
+.g3{width:520px;height:520px;background:#9d174d;bottom:-160px;left:28%;animation:float3 25s ease-in-out infinite}
+.g4{width:380px;height:380px;background:#155e75;top:55%;left:12%;opacity:.4;animation:float2 20s ease-in-out infinite}
+@keyframes float1{50%{transform:translate(80px,50px) scale(1.1)}}
+@keyframes float2{50%{transform:translate(-70px,-40px) scale(1.08)}}
+@keyframes float3{50%{transform:translate(-60px,70px) scale(1.05)}}
+.star{position:absolute;border-radius:50%;background:#fff;animation:tw var(--d,4s) infinite}
+@keyframes tw{0%,100%{opacity:.15;transform:scale(.7)}50%{opacity:1;transform:scale(1.3)}}
 
 /* nav */
-nav{position:sticky;top:0;z-index:50;backdrop-filter:blur(12px);background:#0a0c20e6;border-bottom:1px solid var(--line)}
+nav{position:sticky;top:0;z-index:50;backdrop-filter:blur(14px);background:#0a0c20d9;border-bottom:1px solid var(--line)}
 .nav-in{display:flex;align-items:center;gap:22px;padding:15px 22px;max-width:1180px;margin:0 auto}
 .logo{display:flex;align-items:center;gap:11px;font-weight:800;font-size:20px}
 .logo-badge{width:38px;height:38px;border-radius:12px;background:conic-gradient(from 0deg,var(--gr1),var(--gr2),var(--gr3),var(--gr1));display:flex;align-items:center;justify-content:center;box-shadow:0 0 22px #7c5cff66;animation:spin 8s linear infinite}
@@ -92,90 +96,104 @@ nav{position:sticky;top:0;z-index:50;backdrop-filter:blur(12px);background:#0a0c
 .menu{display:flex;gap:18px;margin-left:auto}
 .menu a{color:var(--mut);font-size:14.5px;transition:.25s}
 .menu a:hover{color:#fff}
-.tg-login{margin-left:8px;min-width:186px;min-height:40px;display:flex;align-items:center}
 @media(max-width:760px){.menu{display:none}}
 
 h2{font-size:clamp(26px,4vw,38px);font-weight:800;margin-bottom:10px}
-.grad{background:linear-gradient(90deg,var(--gr1),var(--gr2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.grad{background:linear-gradient(90deg,var(--gr1),var(--gr2),var(--gr3));background-size:200% 200%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:gradMove 5s ease-in-out infinite}
+@keyframes gradMove{50%{background-position:100% 0}}
 .sub{color:var(--mut);max-width:640px;margin:0 auto 34px;font-size:16px}
-section{padding:72px 0;position:relative;z-index:2}
+section{padding:74px 0;position:relative;z-index:2}
 .center{text-align:center}
 
 /* hero */
-.hero{padding:96px 0 80px}
-.hero h1{font-size:clamp(34px,6vw,58px);font-weight:900;line-height:1.08;margin-bottom:20px}
-.hero p{color:var(--mut);font-size:19px;max-width:620px;margin:0 auto 28px}
+.hero{padding:100px 0 80px;position:relative}
+.hero h1{font-size:clamp(36px,6vw,62px);font-weight:900;line-height:1.08;margin-bottom:22px}
+.hero p{color:var(--mut);font-size:19px;max-width:620px;margin:0 auto 30px}
 .hero-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
-.cta{display:inline-flex;align-items:center;gap:10px;padding:16px 34px;border-radius:18px;background:linear-gradient(90deg,var(--gr1),var(--gr2));font-weight:800;font-size:17px;box-shadow:0 0 34px #7c5cff55;transition:.3s;cursor:pointer;border:none;color:#fff}
-.cta:hover{transform:translateY(-3px);box-shadow:0 0 50px #22d3ee66}
-.cta.ghost{background:transparent;border:1px solid var(--line);box-shadow:none}
+.cta{display:inline-flex;align-items:center;gap:10px;padding:16px 36px;border-radius:18px;background:linear-gradient(90deg,var(--gr1),var(--gr2));background-size:200% 200%;font-weight:800;font-size:17px;box-shadow:0 0 34px #7c5cff66;transition:.3s;cursor:pointer;border:none;color:#fff;animation:gradMove 4s ease infinite;position:relative;overflow:hidden}
+.cta:hover{transform:translateY(-3px) scale(1.02);box-shadow:0 0 60px #22d3ee88}
+.cta.ghost{background:rgba(124,92,255,.08);border:1px solid var(--line);box-shadow:none;animation:none}
 .cta.ghost:hover{border-color:var(--gr2);box-shadow:0 0 30px #22d3ee33}
-.pill{display:inline-flex;gap:8px;align-items:center;padding:8px 16px;border-radius:999px;border:1px solid var(--line);background:#0a0c1fd9;color:var(--mut);font-size:13.5px;margin-bottom:22px}
+.pill{display:inline-flex;gap:8px;align-items:center;padding:9px 18px;border-radius:999px;border:1px solid var(--line);background:#0a0c1fd9;color:var(--mut);font-size:13.5px;margin-bottom:24px}
 .pill b{color:var(--ok)}
+.shine{position:absolute;top:0;left:-60%;width:50%;height:100%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.35),transparent);transform:skewX(-20deg);animation:shine 3s infinite}
+@keyframes shine{to{left:130%}}
+
+/* hero big glow shield */
+.shield{width:120px;height:120px;margin:0 auto 30px;border-radius:34px;background:linear-gradient(135deg,var(--gr1),var(--gr3));display:flex;align-items:center;justify-content:center;font-size:56px;box-shadow:0 0 60px #7c5cff88;animation:shieldPulse 2.5s ease-in-out infinite}
+@keyframes shieldPulse{50%{transform:scale(1.06);box-shadow:0 0 90px #22d3ee99}}
 
 .grid{display:grid;gap:18px}
 .g3{grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
 .g4{grid-template-columns:repeat(auto-fit,minmax(170px,1fr))}
-.card{background:var(--card);border:1px solid var(--line);border-radius:26px;padding:26px;transition:.3s}
-.card:hover{transform:translateY(-4px);border-color:#2f3a6e;box-shadow:0 18px 50px #00000066}
-.card .k{font-size:34px;margin-bottom:12px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:26px;padding:26px;transition:.3s;position:relative;overflow:hidden}
+.card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(124,92,255,.1),transparent 50%);opacity:0;transition:.3s}
+.card:hover{transform:translateY(-6px) scale(1.01);border-color:#4a55a8;box-shadow:0 22px 60px #000000aa}
+.card:hover::before{opacity:1}
+.card .k{font-size:38px;margin-bottom:14px;display:inline-block;transition:.4s;animation:bob 3s ease-in-out infinite}
+.card:hover .k{transform:scale(1.2)}
+@keyframes bob{50%{transform:translateY(-5px)}}
 .card h3{font-size:18px;margin-bottom:8px}
-.card p{color:var(--mut);font-size:14px;line-height:1.5}
+.card p{color:var(--mut);font-size:14px;line-height:1.5;position:relative;z-index:1}
 .country{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:12px 14px;transition:.3s}
-.country:hover{transform:translateY(-3px);border-color:#2f3a6e}
-.country .fl{font-size:26px}
+.country:hover{transform:translateY(-4px);border-color:#4a55a8}
+.country .fl{font-size:26px;animation:bob 3s ease-in-out infinite}
 .country .nm{font-weight:700;font-size:14px}
-.dot{width:9px;height:9px;border-radius:50%;margin-left:auto}
-.dot.on{background:var(--ok);box-shadow:0 0 10px var(--ok);animation:pulse 2s infinite}
-@keyframes pulse{50%{opacity:.4}}
-.plan{position:relative;background:var(--card);border:1px solid var(--line);border-radius:28px;padding:28px;text-align:center;transition:.3s}
-.plan.hot{border:1px solid var(--gr1);box-shadow:0 0 40px #7c5cff33}
-.plan .badge{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:linear-gradient(90deg,var(--gr1),var(--gr2));padding:6px 14px;border-radius:999px;font-size:12px;font-weight:800;white-space:nowrap}
-.plan .price{font-size:40px;font-weight:900;margin:16px 0 4px}
+.dot{width:9px;height:9px;border-radius:50%;margin-left:auto;animation:pulse 2s infinite}
+.dot.on{background:var(--ok);box-shadow:0 0 10px var(--ok)}
+@keyframes pulse{50%{opacity:.35}}
+
+/* plans */
+.plan{position:relative;background:var(--card);border:1px solid var(--line);border-radius:28px;padding:30px 28px;text-align:center;transition:.3s;overflow:visible}
+.plan:hover{transform:translateY(-8px);box-shadow:0 24px 70px #000a}
+.plan.hot{border:1px solid var(--gr1);box-shadow:0 0 46px #7c5cff44;animation:glowPlan 3s ease-in-out infinite}
+@keyframes glowPlan{50%{box-shadow:0 0 70px #7c5cff77}}
+.plan .badge{position:absolute;top:-13px;left:50%;transform:translateX(-50%);background:linear-gradient(90deg,var(--gr1),var(--gr2));padding:6px 16px;border-radius:999px;font-size:12px;font-weight:800;white-space:nowrap;box-shadow:0 4px 20px #7c5cff88}
+.plan .price{font-size:42px;font-weight:900;margin:18px 0 4px}
 .plan .stars{color:var(--gr2);font-size:18px;font-weight:700;margin-bottom:14px}
-.plan ul{list-style:none;text-align:left;color:var(--mut);font-size:14px;display:flex;flex-direction:column;gap:9px;margin:18px 0}
+.plan ul{list-style:none;text-align:left;color:var(--mut);font-size:14px;display:flex;flex-direction:column;gap:10px;margin:20px 0}
 .plan li::before{content:'✓ ';color:var(--ok);font-weight:800}
-.btn{display:block;width:100%;padding:14px;border-radius:16px;border:none;cursor:pointer;font-weight:800;font-size:15px;color:#fff;background:linear-gradient(90deg,var(--gr1),var(--gr2));transition:.3s}
-.btn:hover{transform:translateY(-2px);box-shadow:0 0 30px #7c5cff55}
-.switch{display:inline-flex;gap:4px;background:#0a0c1fd9;border:1px solid var(--line);border-radius:999px;padding:5px;margin-bottom:30px}
-.switch button{padding:10px 22px;border-radius:999px;border:none;background:transparent;color:var(--mut);font-weight:700;cursor:pointer;font-size:14px;transition:.3s}
+.btn{display:block;width:100%;padding:15px;border-radius:16px;border:none;cursor:pointer;font-weight:800;font-size:15px;color:#fff;background:linear-gradient(90deg,var(--gr1),var(--gr2));background-size:200% 200%;transition:.3s;animation:gradMove 4s ease infinite}
+.btn:hover{transform:translateY(-3px);box-shadow:0 0 34px #7c5cff88}
+.switch{display:inline-flex;gap:4px;background:#0a0c1fd9;border:1px solid var(--line);border-radius:999px;padding:5px;margin-bottom:32px}
+.switch button{padding:10px 24px;border-radius:999px;border:none;background:transparent;color:var(--mut);font-weight:700;cursor:pointer;font-size:14px;transition:.3s}
 .switch button.on{background:linear-gradient(90deg,var(--gr1),var(--gr2));color:#fff}
-.marquee{overflow:hidden;position:relative;padding:12px 0}
+
+/* marquee reviews */
+.marquee{overflow:hidden;position:relative;padding:12px 0;mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}
 .mq-track{display:flex;gap:18px;width:max-content;animation:mq 30s linear infinite}
+.mq-track:hover{animation-play-state:paused}
 @keyframes mq{to{transform:translateX(-50%)}}
-.review{min-width:300px;background:var(--card);border:1px solid var(--line);border-radius:22px;padding:20px}
-.review .stars{color:#ffc13d;font-size:15px}
-.review p{color:var(--mut);font-size:13.5px;margin:10px 0;line-height:1.5}
-.review .who{font-size:13px;font-weight:700}
+.review{min-width:300px;background:var(--card);border:1px solid var(--line);border-radius:22px;padding:22px;transition:.3s}
+.review:hover{border-color:#4a55a8}
+.review .stars{color:#ffc13d;font-size:16px;letter-spacing:2px}
+.review p{color:var(--mut);font-size:13.5px;margin:12px 0;line-height:1.5}
+.review .who{font-size:13px;font-weight:700;color:var(--txt)}
+
 .step{text-align:center}
-.step .n{width:56px;height:56px;border-radius:50%;background:linear-gradient(90deg,var(--gr1),var(--gr2));display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:900;margin:0 auto 14px;box-shadow:0 0 26px #7c5cff44}
-.calc{max-width:560px;margin:0 auto;background:var(--card);border:1px solid var(--line);border-radius:26px;padding:30px;text-align:center}
-input[type=range]{width:100%;accent-color:var(--gr1);margin:18px 0}
-.calc-res{font-size:26px;font-weight:900;margin-top:10px}
+.step .n{width:62px;height:62px;border-radius:50%;background:linear-gradient(135deg,var(--gr1),var(--gr3));display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:900;margin:0 auto 16px;box-shadow:0 0 30px #7c5cff66;animation:shieldPulse 3s ease-in-out infinite}
+.calc{max-width:560px;margin:0 auto;background:var(--card);border:1px solid var(--line);border-radius:26px;padding:32px;text-align:center}
+input[type=range]{width:100%;accent-color:var(--gr1);margin:20px 0;height:6px}
+.calc-res{font-size:28px;font-weight:900;margin-top:12px}
 .calc .save{color:var(--ok);font-weight:800}
-.counter{font-size:52px;font-weight:900;background:linear-gradient(90deg,var(--gr2),var(--gr1));-webkit-background-clip:text;background-clip:text;color:transparent}
+.counter{font-size:56px;font-weight:900;background:linear-gradient(90deg,var(--gr2),var(--gr1),var(--gr3));background-size:200% 200%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:gradMove 4s ease infinite}
 .faq{max-width:720px;margin:0 auto}
-.faq-item{background:var(--card);border:1px solid var(--line);border-radius:18px;margin-bottom:12px;overflow:hidden}
+.faq-item{background:var(--card);border:1px solid var(--line);border-radius:18px;margin-bottom:12px;overflow:hidden;transition:.3s}
+.faq-item:hover{border-color:#4a55a8}
 .faq-q{display:flex;justify-content:space-between;align-items:center;padding:18px 22px;cursor:pointer;font-weight:700}
 .faq-q .ar{transition:.3s;color:var(--gr2)}
-.faq-a{max-height:0;overflow:hidden;transition:max-height .35s;padding:0 22px;color:var(--mut);font-size:14.5px;line-height:1.6}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .4s;padding:0 22px;color:var(--mut);font-size:14.5px;line-height:1.6}
 .faq-item.open .faq-a{max-height:300px;padding-bottom:18px}
 .faq-item.open .ar{transform:rotate(180deg)}
-.cabinet{max-width:520px;margin:0 auto;background:var(--card);border:1px solid var(--line);border-radius:26px;padding:30px;text-align:center}
-.avatar{width:76px;height:76px;border-radius:50%;margin:0 auto 14px;background:linear-gradient(90deg,var(--gr1),var(--gr2));display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:900;color:#fff}
-.cab-msg{padding:14px;border-radius:16px;margin-top:16px;font-weight:700;font-size:15px}
-.cab-msg.no{background:#2b1218;color:var(--off);border:1px solid var(--off)}
-.cab-msg.yes{background:#0d2b20;color:var(--ok);border:1px solid var(--ok)}
-.cab-hidden{display:none}
-.login-note{color:var(--mut);font-size:13px;margin-top:12px}
+
 footer{background:#0a0c20;border-top:1px solid var(--line);padding:40px 0;position:relative;z-index:2}
 .foot{display:flex;flex-wrap:wrap;gap:20px;justify-content:space-between;align-items:center;max-width:1180px;margin:0 auto;padding:0 22px}
-.foot a{color:var(--mut);font-size:14px}
+.foot a{color:var(--mut);font-size:14px;transition:.25s}
 .foot a:hover{color:#fff}
 .news-tick{overflow:hidden;border-top:1px solid var(--line);background:#0a0c20;padding:10px 0;position:relative;z-index:2}
 .news-track{display:flex;gap:50px;width:max-content;animation:mq 22s linear infinite;color:var(--mut);font-size:13.5px}
 .float-btn{position:fixed;bottom:26px;right:26px;z-index:60;width:62px;height:62px;border-radius:50%;background:linear-gradient(135deg,var(--gr1),var(--gr3));display:flex;align-items:center;justify-content:center;font-size:26px;cursor:pointer;box-shadow:0 8px 30px #ff5c8a77;animation:bounce 2s infinite}
-@keyframes bounce{50%{transform:translateY(-6px)}}
+@keyframes bounce{50%{transform:translateY(-7px)}}
 .float-menu{position:fixed;bottom:100px;right:26px;z-index:60;display:none;flex-direction:column;gap:8px}
 .float-menu.open{display:flex}
 .float-menu a{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 18px;font-size:14px;font-weight:700;white-space:nowrap;box-shadow:0 10px 30px #0008}
@@ -191,7 +209,7 @@ def DOC(title, body_key):
     return R("""<!DOCTYPE html><html lang="ru"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>"""+title+""" — __SITE__</title></head><body>
-<div class="scene"><div class="g g1"></div><div class="g g2"></div><div class="g g3"></div></div>
+<div class="scene"><div class="g g1"></div><div class="g g2"></div><div class="g g3"></div><div class="g g4"></div></div>
 <nav><div class="nav-in"><a class="logo" href="/"><div class="logo-badge"><span>🛡</span></div>__SITE__</a>
 <div class="menu"><a href="/">Главная</a></div></div></nav>
 <section><div class="wrap doc"><a class="back" href="/">← Вернуться на главную</a>
@@ -217,7 +235,7 @@ def doc_body(kind):
 <p>По вопросам: __EMAIL__ или @__BOTU__.</p>""")
     if kind == "privacy":
         return R("""<h2>1. Какие данные мы обрабатываем</h2>
-<p>Минимально необходимые данные: идентификатор Telegram-аккаунта и статус подписки.</p>
+<p>Минимально необходимые данные для предоставления услуг.</p>
 <h2>2. Использование данных</h2>
 <p>Данные используются исключительно для предоставления услуг и поддержки.</p>
 <h2>3. Передача третьим лицам</h2>
@@ -232,25 +250,26 @@ def index_html():
     return R("""<!DOCTYPE html><html lang="ru"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>__SITE__ — защита за 1 минуту</title>"""+HEAD+"""</head><body>
-<div class="scene"><div class="g g1"></div><div class="g g2"></div><div class="g g3"></div></div>
+<div class="scene"><div class="g g1"></div><div class="g g2"></div><div class="g g3"></div><div class="g g4"></div>
+<script>for(let i=0;i<70;i++){let s=document.createElement('div');s.className='star';s.style.left=Math.random()*100+'%';s.style.top=Math.random()*100+'%';s.style.width=s.style.height=(Math.random()*2+1)+'px';s.style.setProperty('--d',(Math.random()*4+2)+'s');s.style.animationDelay=(Math.random()*5)+'s';document.querySelector('.scene').appendChild(s)}</script></div>
 <nav><div class="nav-in"><a class="logo" href="/"><div class="logo-badge"><span>🛡</span></div>__SITE__</a>
-<div class="menu"><a href="#features">Возможности</a><a href="#countries">Страны</a><a href="#plans">Тарифы</a><a href="#cabinet">Кабинет</a><a href="#faq">FAQ</a></div>
-<div class="tg-login" id="tg-login"></div></div></nav>
+<div class="menu"><a href="#features">Возможности</a><a href="#countries">Страны</a><a href="#plans">Тарифы</a><a href="#faq">FAQ</a></div></div></nav>
 
 <!-- HERO -->
 <section class="hero"><div class="wrap center">
 <span class="pill">🔥 <b>3 дня бесплатно</b> · от 139₽/мес · подключение за 1 минуту</span>
+<div class="shield">🛡️</div>
 <h1>Ваши данные<br>под <span class="grad">защитой</span> уже сейчас</h1>
 <p>Быстрый и приватный VPN в 8 странах мира. Один клик — и ваше соединение зашифровано. Без логов, без лимитов, на всех устройствах.</p>
 <div class="hero-btns">
-<a class="cta" href="__BOT__">🚀 Подключиться</a>
+<a class="cta" href="__BOT__"><span class="shine"></span>🚀 Подключиться</a>
 <a class="cta ghost" href="#plans">💰 Смотреть тарифы</a>
 </div>
-<div style="display:flex;gap:26px;justify-content:center;flex-wrap:wrap;margin-top:40px">
-<div><div style="font-size:28px;font-weight:900" class="grad">8</div><div style="color:var(--mut);font-size:13px">стран мира</div></div>
-<div><div style="font-size:28px;font-weight:900" class="grad">∞</div><div style="color:var(--mut);font-size:13px">трафика</div></div>
-<div><div style="font-size:28px;font-weight:900" class="grad">24/7</div><div style="color:var(--mut);font-size:13px">поддержка</div></div>
-<div><div style="font-size:28px;font-weight:900" class="grad">1 мин</div><div style="color:var(--mut);font-size:13px">до защиты</div></div>
+<div style="display:flex;gap:28px;justify-content:center;flex-wrap:wrap;margin-top:44px">
+<div><div style="font-size:30px;font-weight:900" class="grad">8</div><div style="color:var(--mut);font-size:13px">стран мира</div></div>
+<div><div style="font-size:30px;font-weight:900" class="grad">∞</div><div style="color:var(--mut);font-size:13px">трафика</div></div>
+<div><div style="font-size:30px;font-weight:900" class="grad">24/7</div><div style="color:var(--mut);font-size:13px">поддержка</div></div>
+<div><div style="font-size:30px;font-weight:900" class="grad">1 мин</div><div style="color:var(--mut);font-size:13px">до защиты</div></div>
 </div>
 </div></section>
 
@@ -263,7 +282,7 @@ def index_html():
 <section id="countries"><div class="wrap">
 <div class="center"><h2 class="grad">Статус серверов</h2><p class="sub">Все страны доступны в реальном времени</p></div>
 <div class="grid g4">"""+countries_html()+"""</div>
-<div class="center" style="margin-top:26px"><a class="cta" href="__BOT__">Получить доступ в боте</a></div>
+<div class="center" style="margin-top:28px"><a class="cta" href="__BOT__">Получить доступ в боте</a></div>
 </div></section>
 
 <!-- КАК ПОДКЛЮЧИТЬСЯ -->
@@ -306,27 +325,13 @@ def index_html():
 <ul><li>5 устройств</li><li>8 стран</li><li>Без логов</li><li>Поддержка 24/7</li><li>−38% выгода</li></ul><a class="btn" href="__BOT__">Купить</a></div>
 </div></div></section>
 
-<!-- КАБИНЕТ -->
-<section id="cabinet"><div class="wrap">
-<div class="center"><h2 class="grad">Личный кабинет</h2><p class="sub">Войди через Telegram, чтобы проверить подписку</p></div>
-<div class="cabinet">
-<div id="cab-login"><p style="color:var(--mut);margin-bottom:16px">Нажми кнопку ниже, чтобы войти через Telegram 👇</p>
-<div id="tg-login-cab" style="display:flex;justify-content:center"></div></div>
-<div id="cab-user" class="cab-hidden">
-<div class="avatar" id="cab-ava">?</div><h3 id="cab-name">—</h3>
-<p style="color:var(--mut);font-size:14px;margin-top:4px">@<span id="cab-username">—</span></p>
-<div class="cab-msg no" id="cab-status">Подписка не найдена. Оформите её в боте 👉 <a href="__BOT__" style="color:var(--gr2);font-weight:800">@__BOTU__</a></div>
-</div>
-<div class="login-note" id="cab-note">После входа статус подписки отображается здесь.</div>
-</div></div></section>
-
 <!-- ПАРТНЁРКА -->
 <section><div class="wrap">
 <div class="center"><h2 class="grad">Партнёрская программа</h2><p class="sub">Зарабатывай 20% с каждого платежа</p></div>
-<div class="card center" style="max-width:520px;margin:0 auto">
+<div class="card center" style="max-width:540px;margin:0 auto">
 <div class="k">💸</div><h3>20% от каждого платежа</h3>
 <p>Приглашай друзей через свою ссылку — получай 20% с каждой их оплаты. Выплаты в боте @__BOTU__.</p>
-<div style="margin-top:18px"><a class="btn" href="__BOT__" style="display:inline-block;width:auto;padding:14px 30px">Стать партнёром</a></div>
+<div style="margin-top:20px"><a class="btn" href="__BOT__" style="display:inline-block;width:auto;padding:14px 32px">Стать партнёром</a></div>
 </div></div></section>
 
 <!-- ОТЗЫВЫ -->
@@ -351,7 +356,7 @@ def index_html():
 <h2 class="grad">Уже сейчас защищены</h2>
 <div class="counter" id="counter">0</div>
 <p class="sub">человек уже используют __SITE__</p>
-<div style="margin-top:20px"><a class="cta" href="__BOT__">Подключиться за 1 минуту</a></div></div></section>
+<div style="margin-top:22px"><a class="cta" href="__BOT__">Подключиться за 1 минуту</a></div></div></section>
 
 <div class="news-tick"><div class="news-track" id="news">
 <span>🌍 Добавлены новые серверы в Швеции</span><span>⚡ Скорость увеличена на 30%</span><span>🎁 Акция −30% до конца дня</span>
@@ -378,17 +383,7 @@ document.querySelectorAll('.faq-q').forEach(function(q){q.addEventListener('clic
 document.getElementById('fbtn').addEventListener('click',function(){document.getElementById('fmenu').classList.toggle('open')});
 var revs=[['Дмитрий','Скорость огонь, подключается за секунду!'],['Анна','Наконец-то работаю безопасно из кафе.'],['Игорь','Простая настройка, всё за 1 минуту.'],['Мария','Лучший VPN, что пробовала.'],['Сергей','Поддержка отвечает мгновенно.']];
 var track=document.getElementById('mq');revs.concat(revs).forEach(function(r){track.innerHTML+='<div class="review"><div class="stars">★★★★★</div><p>'+r[1]+'</p><div class="who">'+r[0]+'</div></div>';});
-function onTelegramAuth(user){
-document.getElementById('cab-login').style.display='none';document.getElementById('cab-note').style.display='none';
-document.getElementById('cab-user').classList.remove('cab-hidden');
-document.getElementById('cab-ava').textContent=(user.first_name||'?')[0];
-document.getElementById('cab-name').textContent=user.first_name+(user.last_name?' '+user.last_name:'');
-document.getElementById('cab-username').textContent=user.username||'—';
-document.getElementById('tg-login').innerHTML='<span style="display:inline-flex;gap:8px;align-items:center;padding:8px 14px;border-radius:999px;border:1px solid var(--line);font-size:13px;font-weight:700">👤 '+user.first_name+'</span>';
-var st=document.getElementById('cab-status');st.className='cab-msg no';
-st.innerHTML='Подписка не найдена. Оформите её в боте 👉 <a href="__BOT__" style="color:var(--gr2);font-weight:800">@__BOTU__</a>';}
 </script>
-<script async src="https://telegram.org/js/telegram-login.js" data-telegram-login="__BOTU__" data-bot-id="__BOTID__" data-size="large" data-radius="12" data-onauth="onTelegramAuth(user)"></script>
 </body></html>""")
 
 @app.route("/")
