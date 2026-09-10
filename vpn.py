@@ -28,6 +28,45 @@ def R(t):
         .replace("__BOTID__", BOT_ID)
     )
 
+# ---------- Данные для подстановки ----------
+def countries_html():
+    items = [
+        ("🇫🇮","Финляндия"),("🇵🇱","Польша"),("🇩🇪","Германия"),
+        ("🇳🇱","Нидерланды"),("🇬🇧","Великобритания"),("🇺🇸","США"),
+        ("🇫🇷","Франция"),("🇸🇪","Швеция")]
+    out = ""
+    for fl, nm in items:
+        out += '<div class="country"><span class="fl">'+fl+'</span><span class="nm">'+nm+'</span><span class="dot on"></span></div>'
+    return out
+
+def apps_html():
+    items = [
+        ("📱","iOS","Happ · Streisand · Shadowrocket"),
+        ("🤖","Android","Happ · v2rayTun · Hiddify"),
+        ("🖥","Windows","Hiddify · v2rayN"),
+        ("💻","macOS","Happ · Hiddify · FoXray"),
+        ("📺","Android TV","Happ")]
+    out = ""
+    for k, t, d in items:
+        out += '<div class="card"><div class="k">'+k+'</div><h3>'+t+'</h3><p>'+d+'</p></div>'
+    return out
+
+def guarantee_html():
+    out = ""
+    items = [
+        ("🚀","Высокая скорость","Оптимизированные серверы без ограничений по трафику."),
+        ("🛡","Военное шифрование","AES-256 защищает данные на любых сетях, включая общественный Wi-Fi."),
+        ("🌍","8 стран мира","Финляндия, Польша, Германия, Нидерланды, Великобритания, США, Франция, Швеция."),
+        ("🔒","Без логов","Мы не храним историю ваших подключений и посещений."),
+        ("📱","Все устройства","iOS, Android, Windows, macOS, Android TV."),
+        ("⚡","Один клик","Подключение за секунду без технических знаний."),
+        ("📶","Безлимит трафика","Нет лимитов на скорость и объём данных."),
+        ("🔄","Автопереключение","При обрыве соединение автоматически восстанавливается.")]
+    for k, t, d in items:
+        out += '<div class="card"><div class="k">'+k+'</div><h3>'+t+'</h3><p>'+d+'</p></div>'
+    return out
+
+# ---------- CSS ----------
 HEAD = """<style>
 :root{--bg:#05060f;--card:#0d1022cc;--line:#1c2240;--txt:#e8ecff;--mut:#8a92b8;
 --gr1:#7c5cff;--gr2:#22d3ee;--gr3:#ff3d81;--ok:#22e58f;--off:#ff4d6d}
@@ -62,51 +101,16 @@ h2{font-size:clamp(26px,4vw,38px);font-weight:800;margin-bottom:10px}
 .sub{color:var(--mut);max-width:640px;margin:0 auto 34px;font-size:16px}
 section{padding:74px 0;position:relative;z-index:2}
 .center{text-align:center}
-.hero{padding:86px 0 60px}
+.hero{padding:100px 0 80px}
 .hero h1{font-size:clamp(34px,6vw,60px);font-weight:900;line-height:1.06;margin-bottom:20px}
-.hero p{color:var(--mut);font-size:19px;max-width:600px;margin:0 auto 26px}
+.hero p{color:var(--mut);font-size:19px;max-width:620px;margin:0 auto 28px}
+.hero-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
 .cta{display:inline-flex;align-items:center;gap:10px;padding:16px 34px;border-radius:18px;background:linear-gradient(90deg,var(--gr1),var(--gr2));font-weight:800;font-size:17px;box-shadow:0 0 34px #7c5cff66;transition:.3s;cursor:pointer;border:none;color:#fff}
 .cta:hover{transform:translateY(-3px);box-shadow:0 0 50px #22d3ee88}
+.cta.ghost{background:transparent;border:1px solid var(--line);box-shadow:none}
+.cta.ghost:hover{border-color:var(--gr2);box-shadow:0 0 30px #22d3ee33}
 .pill{display:inline-flex;gap:8px;align-items:center;padding:8px 16px;border-radius:999px;border:1px solid var(--line);background:#0a0c1fd9;color:var(--mut);font-size:13.5px;margin-bottom:22px}
 .pill b{color:var(--ok)}
-.connect-wrap{text-align:center;margin:44px auto 0;max-width:320px}
-.connect{position:relative;width:190px;height:190px;border-radius:50%;margin:0 auto;background:radial-gradient(circle at 30% 30%,#1a1f3d,#0a0c1e);border:2px solid var(--line);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:.35s;user-select:none}
-.connect::before{content:'';position:absolute;inset:-7px;border-radius:50%;padding:3px;background:conic-gradient(from 0deg,var(--gr1),var(--gr2),var(--gr3),var(--gr1));-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;opacity:.4;transition:.35s}
-.connect.on::before{opacity:1;animation:spin 3s linear infinite}
-.connect .in{text-align:center;z-index:2}
-.connect .ic{font-size:54px}
-.connect .st{font-size:13px;color:var(--mut);margin-top:8px;line-height:1.3}
-.connect .load{display:none;font-size:15px;font-weight:800;color:var(--gr2)}
-.connect.connecting .load{display:block}
-.connect.connecting .ic,.connect.connecting .st{display:none}
-.connect.on .ic,.connect.on .st{display:none}
-.connect.on .pro{display:block}
-.connect .pro{display:none;font-size:16px;font-weight:800;color:var(--ok)}
-.spin-ring{position:absolute;inset:0;border-radius:50%;border:4px solid transparent;border-top-color:var(--gr2);display:none}
-.connect.connecting .spin-ring{display:block;animation:spin .8s linear infinite}
-.phone-scene{display:flex;justify-content:center;margin:50px 0}
-.phone{width:300px;border-radius:46px;padding:12px;background:linear-gradient(160deg,#1c2240,#0a0c1e);box-shadow:0 30px 70px #0008,inset 0 0 0 2px #232a4d;position:relative}
-.phone .notch{position:absolute;top:20px;left:50%;transform:translateX(-50%);width:110px;height:24px;background:#000;border-radius:14px;z-index:3}
-.phone .scr{background:#06070f;border-radius:36px;overflow:hidden;height:600px;display:flex;flex-direction:column}
-.scr-head{display:flex;align-items:center;gap:8px;padding:44px 18px 10px;font-size:13px;color:var(--mut)}
-.scr-head .time{margin-left:auto;font-weight:700;color:#fff}
-.scr-top{display:flex;align-items:center;justify-content:space-between;padding:16px 20px 8px}
-.scr-title{font-weight:800;font-size:22px}
-.scr-logo{width:34px;height:34px;border-radius:10px;background:conic-gradient(from 0deg,var(--gr1),var(--gr2),var(--gr3),var(--gr1));display:flex;align-items:center;justify-content:center;font-size:15px}
-.scr-body{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 20px;text-align:center;gap:14px}
-.scr-status{font-size:16px;font-weight:700;color:var(--off)}
-.scr-sub{font-size:13px;color:var(--mut);line-height:1.4}
-.phone-btn{position:relative;width:150px;height:150px;border-radius:50%;border:2px solid var(--line);background:#0a0c1e;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:.35s}
-.phone-btn::before{content:'';position:absolute;inset:-6px;border-radius:50%;padding:3px;background:conic-gradient(from 0deg,var(--off),var(--off),transparent,transparent);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude}
-.phone-btn .pi{font-size:46px;z-index:2}
-.phone-btn.connecting::before{border:0;background:none;border:4px solid transparent;border-top-color:var(--gr2);animation:spin 1s linear infinite}
-.phone-btn.on{background:#0a1f16;border-color:var(--ok);box-shadow:0 0 40px #22e58f44}
-.phone-btn.on::before{background:conic-gradient(from 0deg,var(--ok),var(--ok),transparent,transparent)}
-.tap-hint{font-size:12px;color:var(--mut)}
-.phone-btn.on ~ .tap-hint,.phone-btn.on .pi{display:none}
-.progress{width:70%;height:6px;border-radius:6px;background:#141a33;overflow:hidden;display:none}
-.progress i{display:block;height:100%;width:0%;background:linear-gradient(90deg,var(--gr1),var(--gr2));border-radius:6px;transition:width .15s}
-.connecting+.progress{display:block}
 .grid{display:grid;gap:18px}
 .g2{grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}
 .g3{grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
@@ -189,23 +193,24 @@ footer{background:#07081ad9;border-top:1px solid var(--line);padding:40px 0;posi
 .doc p{margin:12px 0;color:var(--mut);line-height:1.7}
 .doc h2{margin-top:26px;font-size:22px}
 .back{display:inline-flex;gap:8px;color:var(--mut);margin-bottom:24px;font-size:14px}
-@media(max-width:760px){.phone{transform:scale(.9)}}
 </style>"""
 
-def DOC(title):
-    body = doc_body("terms" if title=="terms" else "privacy" if title=="privacy" else "refund")
+# ---------- Страница документа ----------
+def DOC(title, body_key):
+    body = doc_body(body_key)
     return R("""<!DOCTYPE html><html lang="ru"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>{t} — __SITE__</title><link rel="icon" href="data:image/svg+xml,...">
-</head><body>
+<title>"""+title+""" — __SITE__</title><link rel="icon" href="data:image/svg+xml,..."></head><body>
 <div class="scene"><div class="g g1"></div><div class="g g2"></div><div class="g g3"></div></div>
 <nav><div class="nav-in"><a class="logo" href="/"><div class="logo-badge"><span>🛡</span></div>__SITE__</a>
 <div class="menu"><a href="/">Главная</a></div></div></nav>
 <section><div class="wrap doc"><a class="back" href="/">← Вернуться на главную</a>
-<h1 class="grad">{t}</h1>{body}</div></section>
+<h1 class="grad">"""+title+"""</h1>
+"""+body+"""
+</div></section>
 <footer><div class="foot"><span>© __SITE__</span>
 <a href="/terms">Условия</a><a href="/privacy">Конфиденциальность</a><a href="/refund">Возврат</a></div></footer>
-</body></html>""".format(t=title, body=body))
+</body></html>""")
 
 def doc_body(kind):
     if kind == "terms":
@@ -233,26 +238,11 @@ def doc_body(kind):
 <h2>2. Как оформить возврат</h2>
 <p>Напишите оператору @__BOTU__ или на __EMAIL__, указав причину. Возврат тем же способом оплаты в течение 3–5 рабочих дней.</p>""")
 
-@app.route("/")
-def index():
-    flags = [
-        ("🇫🇮","Финляндия","on"),("🇵🇱","Польша","on"),("🇩🇪","Германия","on"),("🇳🇱","Нидерланды","on"),
-        ("🇬🇧","Великобритания","on"),("🇺🇸","США","on"),("🇫🇷","Франция","on"),("🇸🇪","Швеция","on")]
-    countries = ""
-    for fl, nm, st in flags:
-        countries += '<div class="country"><span class="fl">'+fl+'</span><span class="nm">'+nm+'</span><span class="dot '+st+'"></span></div>'
-
-    apps = [
-        ("📱","iOS","Happ · Streisand · Shadowrocket"),
-        ("🤖","Android","Happ · v2rayTun · Hiddify"),
-        ("🖥","Windows","Hiddify · v2rayN"),
-        ("💻","macOS","Happ · Hiddify · FoXray"),
-        ("📺","Android TV","Happ")]
-    apps_html = ""
-    for k, t, d in apps:
-        apps_html += '<div class="card"><div class="k">'+k+'</div><h3>'+t+'</h3><p>'+d+'</p></div>'
-
-    page = HEAD + """</head><body>
+# ---------- Главная ----------
+def index_html():
+    return R("""<!DOCTYPE html><html lang="ru"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>__SITE__ — защита за 1 минуту</title>"""+HEAD+"""</head><body>
 <div class="scene"><div class="g g1"></div><div class="g g2"></div><div class="g g3"></div>
 <script>for(let i=0;i<45;i++){let s=document.createElement('div');s.className='star';s.style.left=Math.random()*100+'%';s.style.top=Math.random()*100+'%';s.style.animationDelay=Math.random()*4+'s';document.querySelector('.scene').appendChild(s)}</script></div>
 <nav><div class="nav-in"><a class="logo" href="/"><div class="logo-badge"><span>🛡</span></div>__SITE__</a>
@@ -261,35 +251,24 @@ def index():
 <section class="hero"><div class="wrap center">
 <span class="pill">🔥 <b>3 дня бесплатно</b> · от 139₽/мес · подключение за 1 минуту</span>
 <h1>Ваши данные<br>под <span class="grad">защитой</span> уже сейчас</h1>
-<p>Быстрый и приватный VPN в 8 странах мира. Один клик — и ваше соединение зашифровано.</p>
-<div class="connect-wrap"><div class="connect" id="connect"><div class="spin-ring"></div>
-<div class="in"><div class="ic">🔒</div><div class="st">Нажми, чтобы<br>подключиться</div></div>
-<div class="load">Подключение…</div><div class="pro">🛡️ Ваши данные защищены</div></div></div>
+<p>Быстрый и приватный VPN в 8 странах мира. Один клик — и ваше соединение зашифровано. Без логов, без лимитов, на всех устройствах.</p>
+<div class="hero-btns">
+<a class="cta" href="__BOT__">🚀 Подключиться</a>
+<a class="cta ghost" href="#plans">💰 Смотреть тарифы</a>
+</div>
+<div class="stats" style="display:flex;gap:26px;justify-content:center;flex-wrap:wrap;margin-top:40px">
+<div><div style="font-size:28px;font-weight:900" class="grad">8</div><div style="color:var(--mut);font-size:13px">стран мира</div></div>
+<div><div style="font-size:28px;font-weight:900" class="grad">∞</div><div style="color:var(--mut);font-size:13px">трафика</div></div>
+<div><div style="font-size:28px;font-weight:900" class="grad">24/7</div><div style="color:var(--mut);font-size:13px">поддержка</div></div>
+<div><div style="font-size:28px;font-weight:900" class="grad">1 мин</div><div style="color:var(--mut);font-size:13px">до защиты</div></div>
+</div>
 </div></section>
-<section class="phone-scene"><div class="wrap"><div class="phone">
-<div class="notch"></div><div class="scr">
-<div class="scr-head"><span>●</span><span>●●</span><span class="time">12:47</span></div>
-<div class="scr-top"><div class="scr-title">Awesome VPN</div><div class="scr-logo">🛡</div></div>
-<div class="scr-body">
-<div class="scr-status" id="pstatus">Не подключено</div>
-<div class="scr-sub" id="psub">Данные не защищены.<br>Нажми, чтобы подключиться</div>
-<div class="phone-btn" id="pbtn"><div class="pi">⚡</div></div>
-<div class="progress" id="pprog"><i></i></div>
-<div class="tap-hint" id="ptap">Нажмите, чтобы подключиться</div>
-</div></div></div></div></section>
 <section id="features"><div class="wrap">
 <div class="center"><h2 class="grad">Почему __SITE__?</h2><p class="sub">Максимальная защита без сложных настроек</p></div>
-<div class="grid g3">
-<div class="card"><div class="k">🚀</div><h3>Высокая скорость</h3><p>Оптимизированные серверы без ограничения трафика.</p></div>
-<div class="card"><div class="k">🛡</div><h3>Военное шифрование</h3><p>AES-256 защищает ваши данные на любых сетях.</p></div>
-<div class="card"><div class="k">🌍</div><h3>8 стран мира</h3><p>Финляндия, Польша, Германия, Нидерланды и другие.</p></div>
-<div class="card"><div class="k">📶</div><h3>Без логов</h3><p>Мы не храним историю ваших подключений.</p></div>
-<div class="card"><div class="k">📱</div><h3>Все устройства</h3><p>iOS, Android, Windows, macOS, Android TV.</p></div>
-<div class="card"><div class="k">⚡</div><h3>Один клик</h3><p>Подключение за секунду, без технических знаний.</p></div>
-</div></div></section>
+<div class="grid g3">"""+guarantee_html()+"""</div></div></section>
 <section><div class="wrap">
 <div class="center"><h2 class="grad">Статус серверов</h2><p class="sub">Все страны доступны в реальном времени</p></div>
-<div class="grid g4">""" + countries + """</div>
+<div class="grid g4">"""+countries_html()+"""</div>
 <div class="center" style="margin-top:26px"><a class="cta" href="__BOT__">Получить доступ в боте</a></div>
 </div></section>
 <section><div class="wrap">
@@ -308,7 +287,7 @@ def index():
 </div></div></section>
 <section><div class="wrap">
 <div class="center"><h2 class="grad">Приложения</h2><p class="sub">Работает на любой платформе</p></div>
-<div class="grid g3">""" + apps_html + """</div></div></section>
+<div class="grid g3">"""+apps_html()+"""</div></div></section>
 <section><div class="wrap">
 <div class="center"><h2 class="grad">Калькулятор выгоды</h2><p class="sub">Выбери длительность и посчитай экономию</p></div>
 <div class="calc">
@@ -317,7 +296,7 @@ def index():
 <div class="calc-res">💰 <span id="cprice">519₽</span> / <span id="cstars">364⭐</span></div>
 <div class="save" id="csave">Вы экономите 297₽ против помесячной оплаты!</div>
 </div></div></section>
-<section><div class="wrap center">
+<section id="plans"><div class="wrap center">
 <h2 class="grad">Тарифы</h2><p class="sub">Гибкие тарифы для любого количества устройств</p>
 <div class="switch"><button data-cur="rub" class="on" onclick="setCur('rub')">₽ рубли</button><button data-cur="star" onclick="setCur('star')">⭐ звёзды</button></div>
 <div class="grid g3" id="plans">
@@ -330,12 +309,12 @@ def index():
 <div class="plan"><div class="badge">Максимум</div>
 <h3>6 месяцев</h3><div class="price" data-r="519" data-s="364">519₽</div><div class="stars" data-r="519₽" data-s="364⭐">или 364⭐</div>
 <ul><li>5 устройств</li><li>8 стран</li><li>Без логов</li><li>Поддержка 24/7</li><li>−38% выгода</li></ul><a class="btn" href="__BOT__">Купить</a></div>
-</div></div></section>
-<section><div class="wrap">
-<div class="discount center"><h2 class="grad" style="font-size:22px">🔥 Горячая акция</h2>
+</div>
+<div style="margin-top:22px" class="discount center"><h3 class="grad" style="font-size:20px">🔥 Горячая акция −30%</h3>
 <div class="timer" id="timer">00:00:00</div>
-<p style="color:var(--mut);margin-top:10px">Скидка −30% на все тарифы до конца дня</p>
-<div style="margin-top:18px"><a class="cta" href="__BOT__">Забрать скидку в боте</a></div></div></div></section>
+<p style="color:var(--mut);margin-top:8px">До конца дня на все тарифы</p>
+<div style="margin-top:16px"><a class="cta" href="__BOT__">Забрать скидку в боте</a></div></div>
+</div></section>
 <section id="cabinet"><div class="wrap">
 <div class="center"><h2 class="grad">Личный кабинет</h2><p class="sub">Войди через Telegram, чтобы проверить подписку</p></div>
 <div class="cabinet">
@@ -382,15 +361,6 @@ def index():
 <div class="float-menu" id="fmenu"><a href="__BOT__">🤖 Чат с ботом</a><a href="__SUPPORT__">✉️ Оператор</a></div>
 <div class="float-btn" id="fbtn">💬</div>
 <script>
-(function(){var c=document.getElementById('connect'),st=c.querySelector('.st'),ic=c.querySelector('.ic');
-c.addEventListener('click',function(){if(c.classList.contains('on')){c.classList.remove('on');ic.textContent='🔒';st.textContent='Нажми, чтобы подключиться';return}
-c.classList.add('connecting');setTimeout(function(){c.classList.remove('connecting');c.classList.add('on');ic.textContent='🛡️'},2200);});})();
-(function(){var b=document.getElementById('pbtn'),s=document.getElementById('pstatus'),u=document.getElementById('psub'),pg=document.getElementById('pprog'),bar=pg.querySelector('i'),tap=document.getElementById('ptap'),on=false,prog=0;
-b.addEventListener('click',function(){
-if(on){on=false;b.classList.remove('on');s.textContent='Не подключено';u.textContent='Данные не защищены. Нажми, чтобы подключиться';pg.style.display='none';tap.style.display='block';return}
-if(b.classList.contains('connecting'))return;
-b.classList.add('connecting');pg.style.display='block';tap.style.display='none';s.textContent='Подключение…';u.textContent='Устанавливаем безопасное соединение';prog=0;
-var t=setInterval(function(){prog+=5;bar.style.width=prog+'%';if(prog>=100){clearInterval(t);b.classList.remove('connecting');b.classList.add('on');s.textContent='Подключено';u.textContent='Данные защищены 🛡️';pg.style.display='none';}},120);});})();
 var cur='rub';
 function setCur(c){cur=c;document.querySelectorAll('.price').forEach(function(p){p.textContent=(c==='rub'?p.dataset.r+'₽':p.dataset.s+'⭐')});
 document.querySelectorAll('.stars').forEach(function(x){x.textContent=(c==='rub'?x.dataset.r+' или '+x.dataset.s+'⭐':x.dataset.s+' или '+x.dataset.r)});
@@ -422,20 +392,23 @@ var st=document.getElementById('cab-status');st.className='cab-msg no';
 st.innerHTML='Подписка не найдена. Оформите её в боте 👉 <a href="__BOT__" style="color:var(--gr2);font-weight:800">@__BOTU__</a>';}
 </script>
 <script async src="https://telegram.org/js/telegram-login.js" data-telegram-login="__BOTU__" data-bot-id="__BOTID__" data-size="large" data-radius="12" data-onauth="onTelegramAuth(user)"></script>
-</body></html>"""
-    return R(page)
+</body></html>""")
+
+@app.route("/")
+def index():
+    return index_html()
 
 @app.route("/terms")
 def terms():
-    return DOC("terms")
+    return DOC("Условия использования", "terms")
 
 @app.route("/privacy")
 def privacy():
-    return DOC("privacy")
+    return DOC("Политика конфиденциальности", "privacy")
 
 @app.route("/refund")
 def refund():
-    return DOC("refund")
+    return DOC("Политика возврата", "refund")
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)), debug=False)
