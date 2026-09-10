@@ -10,11 +10,11 @@ PORT = int(os.getenv("PORT", 5000))
 # ================== РЕДАКТИРУЙ ЭТО ==================
 SITE_NAME   = "Awesome VPN"
 BOT         = "https://t.me/awesomeproxyvpn_bot"      # главный бот
-SUPPORT_BOT = "https://t.me/awesomeproxyvpn_support"  # бот поддержки (замени)
-EMAIL       = "support@awesomevpn.site"               # почта поддержки (замени)
-SITE_URL    = "https://awesomevpn.site"               # твой домен (замени)
-OPERATOR    = "AWESOME VPN LTD"                       # название оператора (замени)
-OP_COUNTRY  = "Великобритания"                        # юрисдикция оператора
+SUPPORT_BOT = "https://t.me/flidges"  # бот поддержки (замени)
+EMAIL       = "ffdfdfd44242ddd@gmail.com"               # почта поддержки (замени)
+SITE_URL    = "https://awesomevpn.relaxdev.ru"            # твой домен (замени)
+OPERATOR    = "AWESOME VPN LTE"                       # название оператора (замени)
+OP_COUNTRY  = "Germany"                        # юрисдикция оператора
 # =====================================================
 
 BG = r"""<div class="scene">
