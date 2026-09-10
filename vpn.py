@@ -28,7 +28,6 @@ def R(t):
         .replace("__BOTID__", BOT_ID)
     )
 
-# ---------- Данные для подстановки ----------
 def countries_html():
     items = [
         ("🇫🇮","Финляндия"),("🇵🇱","Польша"),("🇩🇪","Германия"),
@@ -55,18 +54,17 @@ def guarantee_html():
     out = ""
     items = [
         ("🚀","Высокая скорость","Оптимизированные серверы без ограничений по трафику."),
-        ("🛡","Военное шифрование","AES-256 защищает данные на любых сетях, включая общественный Wi-Fi."),
-        ("🌍","8 стран мира","Финляндия, Польша, Германия, Нидерланды, Великобритания, США, Франция, Швеция."),
-        ("🔒","Без логов","Мы не храним историю ваших подключений и посещений."),
+        ("🛡","Военное шифрование","AES-256 защищает данные на любых сетях."),
+        ("🌍","8 стран мира","Финляндия, Польша, Германия, Нидерланды и другие."),
+        ("🔒","Без логов","Мы не храним историю ваших подключений."),
         ("📱","Все устройства","iOS, Android, Windows, macOS, Android TV."),
-        ("⚡","Один клик","Подключение за секунду без технических знаний."),
+        ("⚡","Один клик","Подключение за секунду без сложных настроек."),
         ("📶","Безлимит трафика","Нет лимитов на скорость и объём данных."),
-        ("🔄","Автопереключение","При обрыве соединение автоматически восстанавливается.")]
+        ("🔄","Автопереключение","При обрыве соединение восстанавливается автоматически.")]
     for k, t, d in items:
         out += '<div class="card"><div class="k">'+k+'</div><h3>'+t+'</h3><p>'+d+'</p></div>'
     return out
 
-# ---------- CSS ----------
 HEAD = """<style>
 :root{--bg:#05060f;--card:#0d1022cc;--line:#1c2240;--txt:#e8ecff;--mut:#8a92b8;
 --gr1:#7c5cff;--gr2:#22d3ee;--gr3:#ff3d81;--ok:#22e58f;--off:#ff4d6d}
@@ -112,7 +110,6 @@ section{padding:74px 0;position:relative;z-index:2}
 .pill{display:inline-flex;gap:8px;align-items:center;padding:8px 16px;border-radius:999px;border:1px solid var(--line);background:#0a0c1fd9;color:var(--mut);font-size:13.5px;margin-bottom:22px}
 .pill b{color:var(--ok)}
 .grid{display:grid;gap:18px}
-.g2{grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}
 .g3{grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
 .g4{grid-template-columns:repeat(auto-fit,minmax(170px,1fr))}
 .card{background:var(--card);border:1px solid var(--line);border-radius:28px;padding:26px;transition:.3s}
@@ -147,8 +144,6 @@ section{padding:74px 0;position:relative;z-index:2}
 .badge-ip.warn{background:#2b1218;color:var(--off);border:1px solid var(--off)}
 .scanline{height:3px;width:100%;border-radius:3px;background:linear-gradient(90deg,transparent,var(--gr2),transparent);background-size:200% 100%;animation:scan 1.2s linear infinite;margin:16px 0;display:none}
 @keyframes scan{to{background-position:-200% 0}}
-.timer{font-size:34px;font-weight:900;letter-spacing:2px;background:linear-gradient(90deg,var(--gr3),var(--gr2));-webkit-background-clip:text;background-clip:text;color:transparent;margin-top:10px}
-.discount{padding:30px;border-radius:28px;border:1px dashed var(--gr3);background:#1a0b14cc;text-align:center}
 .marquee{overflow:hidden;position:relative;padding:12px 0}
 .mq-track{display:flex;gap:18px;width:max-content;animation:mq 30s linear infinite}
 @keyframes mq{to{transform:translateX(-50%)}}
@@ -195,12 +190,11 @@ footer{background:#07081ad9;border-top:1px solid var(--line);padding:40px 0;posi
 .back{display:inline-flex;gap:8px;color:var(--mut);margin-bottom:24px;font-size:14px}
 </style>"""
 
-# ---------- Страница документа ----------
 def DOC(title, body_key):
     body = doc_body(body_key)
     return R("""<!DOCTYPE html><html lang="ru"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>"""+title+""" — __SITE__</title><link rel="icon" href="data:image/svg+xml,..."></head><body>
+<title>"""+title+""" — __SITE__</title></head><body>
 <div class="scene"><div class="g g1"></div><div class="g g2"></div><div class="g g3"></div></div>
 <nav><div class="nav-in"><a class="logo" href="/"><div class="logo-badge"><span>🛡</span></div>__SITE__</a>
 <div class="menu"><a href="/">Главная</a></div></div></nav>
@@ -215,7 +209,7 @@ def DOC(title, body_key):
 def doc_body(kind):
     if kind == "terms":
         return R("""<h2>1. Общие положения</h2>
-<p>Настоящие условия регулируют использование сервиса __SITE__ (далее — «Сервис»), предоставляемого __OPERATOR__.</p>
+<p>Настоящие условия регулируют использование сервиса __SITE__, предоставляемого __OPERATOR__.</p>
 <h2>2. Услуги</h2>
 <p>Сервис предоставляет защищённое подключение к сети Интернет через серверы в 8 странах.</p>
 <h2>3. Пробный период</h2>
@@ -238,7 +232,6 @@ def doc_body(kind):
 <h2>2. Как оформить возврат</h2>
 <p>Напишите оператору @__BOTU__ или на __EMAIL__, указав причину. Возврат тем же способом оплаты в течение 3–5 рабочих дней.</p>""")
 
-# ---------- Главная ----------
 def index_html():
     return R("""<!DOCTYPE html><html lang="ru"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
@@ -246,8 +239,10 @@ def index_html():
 <div class="scene"><div class="g g1"></div><div class="g g2"></div><div class="g g3"></div>
 <script>for(let i=0;i<45;i++){let s=document.createElement('div');s.className='star';s.style.left=Math.random()*100+'%';s.style.top=Math.random()*100+'%';s.style.animationDelay=Math.random()*4+'s';document.querySelector('.scene').appendChild(s)}</script></div>
 <nav><div class="nav-in"><a class="logo" href="/"><div class="logo-badge"><span>🛡</span></div>__SITE__</a>
-<div class="menu"><a href="#features">Возможности</a><a href="#plans">Тарифы</a><a href="#cabinet">Кабинет</a><a href="#faq">FAQ</a></div>
+<div class="menu"><a href="#features">Возможности</a><a href="#countries">Страны</a><a href="#plans">Тарифы</a><a href="#cabinet">Кабинет</a><a href="#faq">FAQ</a></div>
 <div class="tg-login" id="tg-login"></div></div></nav>
+
+<!-- HERO -->
 <section class="hero"><div class="wrap center">
 <span class="pill">🔥 <b>3 дня бесплатно</b> · от 139₽/мес · подключение за 1 минуту</span>
 <h1>Ваши данные<br>под <span class="grad">защитой</span> уже сейчас</h1>
@@ -256,21 +251,27 @@ def index_html():
 <a class="cta" href="__BOT__">🚀 Подключиться</a>
 <a class="cta ghost" href="#plans">💰 Смотреть тарифы</a>
 </div>
-<div class="stats" style="display:flex;gap:26px;justify-content:center;flex-wrap:wrap;margin-top:40px">
+<div style="display:flex;gap:26px;justify-content:center;flex-wrap:wrap;margin-top:40px">
 <div><div style="font-size:28px;font-weight:900" class="grad">8</div><div style="color:var(--mut);font-size:13px">стран мира</div></div>
 <div><div style="font-size:28px;font-weight:900" class="grad">∞</div><div style="color:var(--mut);font-size:13px">трафика</div></div>
 <div><div style="font-size:28px;font-weight:900" class="grad">24/7</div><div style="color:var(--mut);font-size:13px">поддержка</div></div>
 <div><div style="font-size:28px;font-weight:900" class="grad">1 мин</div><div style="color:var(--mut);font-size:13px">до защиты</div></div>
 </div>
 </div></section>
+
+<!-- ПРЕИМУЩЕСТВА -->
 <section id="features"><div class="wrap">
 <div class="center"><h2 class="grad">Почему __SITE__?</h2><p class="sub">Максимальная защита без сложных настроек</p></div>
 <div class="grid g3">"""+guarantee_html()+"""</div></div></section>
-<section><div class="wrap">
+
+<!-- СТРАНЫ -->
+<section id="countries"><div class="wrap">
 <div class="center"><h2 class="grad">Статус серверов</h2><p class="sub">Все страны доступны в реальном времени</p></div>
 <div class="grid g4">"""+countries_html()+"""</div>
 <div class="center" style="margin-top:26px"><a class="cta" href="__BOT__">Получить доступ в боте</a></div>
 </div></section>
+
+<!-- ПРОВЕРКА IP -->
 <section><div class="wrap">
 <div class="center"><h2 class="grad">Проверь свой IP</h2><p class="sub">Узнай, защищено ли твоё соединение прямо сейчас</p></div>
 <div class="ip-box"><div class="scanline" id="scanline"></div>
@@ -278,6 +279,8 @@ def index_html():
 <button class="btn" id="ipbtn" style="display:inline-block;width:auto;padding:12px 26px">Проверить мой IP</button>
 <div style="margin-top:16px"><span class="badge-ip warn" id="ipbadge">⏳ Статус неизвестен</span></div>
 </div></div></section>
+
+<!-- КАК ПОДКЛЮЧИТЬСЯ -->
 <section><div class="wrap">
 <div class="center"><h2 class="grad">Как подключиться</h2><p class="sub">Всего 3 шага до полной защиты</p></div>
 <div class="grid g3">
@@ -285,9 +288,13 @@ def index_html():
 <div class="step"><div class="n">2</div><h3>Получи ключ в боте</h3><p>Бот @__BOTU__ выдаст ключ и подписку.</p></div>
 <div class="step"><div class="n">3</div><h3>Нажми «Подключить»</h3><p>Готово — вы под защитой.</p></div>
 </div></div></section>
+
+<!-- ПРИЛОЖЕНИЯ -->
 <section><div class="wrap">
 <div class="center"><h2 class="grad">Приложения</h2><p class="sub">Работает на любой платформе</p></div>
 <div class="grid g3">"""+apps_html()+"""</div></div></section>
+
+<!-- КАЛЬКУЛЯТОР -->
 <section><div class="wrap">
 <div class="center"><h2 class="grad">Калькулятор выгоды</h2><p class="sub">Выбери длительность и посчитай экономию</p></div>
 <div class="calc">
@@ -296,10 +303,12 @@ def index_html():
 <div class="calc-res">💰 <span id="cprice">519₽</span> / <span id="cstars">364⭐</span></div>
 <div class="save" id="csave">Вы экономите 297₽ против помесячной оплаты!</div>
 </div></div></section>
+
+<!-- ТАРИФЫ -->
 <section id="plans"><div class="wrap center">
 <h2 class="grad">Тарифы</h2><p class="sub">Гибкие тарифы для любого количества устройств</p>
 <div class="switch"><button data-cur="rub" class="on" onclick="setCur('rub')">₽ рубли</button><button data-cur="star" onclick="setCur('star')">⭐ звёзды</button></div>
-<div class="grid g3" id="plans">
+<div class="grid g3">
 <div class="plan"><div class="badge">Популярный</div>
 <h3>1 месяц</h3><div class="price" data-r="139" data-s="98">139₽</div><div class="stars" data-r="139₽" data-s="98⭐">или 98⭐</div>
 <ul><li>3 устройства</li><li>8 стран</li><li>Без логов</li><li>Поддержка 24/7</li></ul><a class="btn" href="__BOT__">Купить</a></div>
@@ -309,12 +318,9 @@ def index_html():
 <div class="plan"><div class="badge">Максимум</div>
 <h3>6 месяцев</h3><div class="price" data-r="519" data-s="364">519₽</div><div class="stars" data-r="519₽" data-s="364⭐">или 364⭐</div>
 <ul><li>5 устройств</li><li>8 стран</li><li>Без логов</li><li>Поддержка 24/7</li><li>−38% выгода</li></ul><a class="btn" href="__BOT__">Купить</a></div>
-</div>
-<div style="margin-top:22px" class="discount center"><h3 class="grad" style="font-size:20px">🔥 Горячая акция −30%</h3>
-<div class="timer" id="timer">00:00:00</div>
-<p style="color:var(--mut);margin-top:8px">До конца дня на все тарифы</p>
-<div style="margin-top:16px"><a class="cta" href="__BOT__">Забрать скидку в боте</a></div></div>
-</div></section>
+</div></div></section>
+
+<!-- КАБИНЕТ -->
 <section id="cabinet"><div class="wrap">
 <div class="center"><h2 class="grad">Личный кабинет</h2><p class="sub">Войди через Telegram, чтобы проверить подписку</p></div>
 <div class="cabinet">
@@ -327,6 +333,8 @@ def index_html():
 </div>
 <div class="login-note" id="cab-note">После входа статус подписки отображается здесь.</div>
 </div></div></section>
+
+<!-- ПАРТНЁРКА -->
 <section><div class="wrap">
 <div class="center"><h2 class="grad">Партнёрская программа</h2><p class="sub">Зарабатывай 20% с каждого платежа</p></div>
 <div class="card center" style="max-width:520px;margin:0 auto">
@@ -334,9 +342,13 @@ def index_html():
 <p>Приглашай друзей через свою ссылку — получай 20% с каждой их оплаты. Выплаты в боте @__BOTU__.</p>
 <div style="margin-top:18px"><a class="btn" href="__BOT__" style="display:inline-block;width:auto;padding:14px 30px">Стать партнёром</a></div>
 </div></div></section>
+
+<!-- ОТЗЫВЫ -->
 <section><div class="wrap">
 <div class="center"><h2 class="grad">Отзывы</h2><p class="sub">Нам доверяют тысячи пользователей</p></div>
 <div class="marquee"><div class="mq-track" id="mq"></div></div></div></section>
+
+<!-- FAQ -->
 <section id="faq"><div class="wrap">
 <div class="center"><h2 class="grad">Частые вопросы</h2><p class="sub">Всё, что нужно знать о сервисе</p></div>
 <div class="faq">
@@ -347,19 +359,25 @@ def index_html():
 <div class="faq-item"><div class="faq-q">Как оплатить тариф?<span class="ar">▾</span></div><div class="faq-a">В боте @__BOTU__ можно оплатить рублями или звёздами Telegram.</div></div>
 <div class="faq-item"><div class="faq-q">Как работает возврат?<span class="ar">▾</span></div><div class="faq-a">Гарантия возврата 7 дней — напишите оператору в боте.</div></div>
 </div></div></section>
+
+<!-- СЧЁТЧИК -->
 <section><div class="wrap center">
 <h2 class="grad">Уже сейчас защищены</h2>
 <div class="counter" id="counter">0</div>
 <p class="sub">человек уже используют __SITE__</p>
 <div style="margin-top:20px"><a class="cta" href="__BOT__">Подключиться за 1 минуту</a></div></div></section>
+
 <div class="news-tick"><div class="news-track" id="news">
 <span>🌍 Добавлены новые серверы в Швеции</span><span>⚡ Скорость увеличена на 30%</span><span>🎁 Акция −30% до конца дня</span>
 <span>🛡 Обновлено шифрование</span><span>📱 Поддержка Android TV</span></div></div>
+
 <footer><div class="foot"><span>© __SITE__</span>
 <a href="/terms">Условия</a><a href="/privacy">Конфиденциальность</a><a href="/refund">Возврат</a>
 <a href="__SUPPORT__">Поддержка</a></div></footer>
+
 <div class="float-menu" id="fmenu"><a href="__BOT__">🤖 Чат с ботом</a><a href="__SUPPORT__">✉️ Оператор</a></div>
 <div class="float-btn" id="fbtn">💬</div>
+
 <script>
 var cur='rub';
 function setCur(c){cur=c;document.querySelectorAll('.price').forEach(function(p){p.textContent=(c==='rub'?p.dataset.r+'₽':p.dataset.s+'⭐')});
@@ -369,9 +387,6 @@ document.querySelectorAll('.switch button').forEach(function(b){b.classList.togg
 var map={1:[139,98,0],2:[278,196,0],3:[249,175,89],6:[519,364,297]};
 r.addEventListener('input',function(){var m=map[r.value];cv.textContent=(r.value==='6'?'6 месяцев':r.value+' месяц(а)');
 cp.textContent=m[0]+'₽';cs.textContent=m[1]+'⭐';sv.textContent=m[2]>0?('Вы экономите '+m[2]+'₽ против помесячной оплаты!'):'Помесячная оплата без скидки';});})();
-(function(){var end=Date.now()+((23-new Date().getHours())*3600+(59-new Date().getMinutes())*60+(59-new Date().getSeconds()))*1000;
-setInterval(function(){var d=end-Date.now();if(d<0)d=0;var h=Math.floor(d/3600000),m=Math.floor(d%3600000/60000),s=Math.floor(d%60000/1000);
-document.getElementById('timer').textContent=(h<10?'0':'')+h+':'+(m<10?'0':'')+m+':'+(s<10?'0':'')+s;},1000);})();
 (function(){var el=document.getElementById('counter'),target=12847,t=0;var iv=setInterval(function(){t+=Math.ceil(target/80);if(t>=target){t=target;clearInterval(iv)}el.textContent=t.toLocaleString('ru-RU');},30);})();
 document.getElementById('ipbtn').addEventListener('click',function(){var sl=document.getElementById('scanline'),ad=document.getElementById('ipaddr'),bg=document.getElementById('ipbadge');
 sl.style.display='block';ad.textContent='Сканируем…';bg.textContent='⏳ Проверка…';bg.className='badge-ip warn';
