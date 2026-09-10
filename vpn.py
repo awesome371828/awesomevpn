@@ -66,26 +66,26 @@ def guarantee_html():
     return out
 
 HEAD = """<style>
-:root{--bg:#05060f;--card:#0d1022cc;--line:#1c2240;--txt:#e8ecff;--mut:#8a92b8;
---gr1:#7c5cff;--gr2:#22d3ee;--gr3:#ff3d81;--ok:#22e58f;--off:#ff4d6d}
+:root{--bg:#08091a;--card:#11132b;--line:#232a4d;--txt:#eef1ff;--mut:#98a0c8;
+--gr1:#7c5cff;--gr2:#22d3ee;--gr3:#ff5c8a;--ok:#22e58f;--off:#ff4d6d}
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{background:var(--bg);color:var(--txt);font-family:'Segoe UI',system-ui,-apple-system,sans-serif;overflow-x:hidden}
 a{color:inherit;text-decoration:none}
 .wrap{max-width:1180px;margin:0 auto;padding:0 22px;position:relative;z-index:2}
-.scene{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
-.g{position:absolute;border-radius:50%;filter:blur(90px);opacity:.55}
-.g1{width:520px;height:520px;background:var(--gr1);top:-140px;left:-120px;animation:float1 14s infinite}
-.g2{width:460px;height:460px;background:var(--gr2);top:30%;right:-140px;animation:float2 16s infinite}
-.g3{width:420px;height:420px;background:var(--gr3);bottom:-120px;left:35%;animation:float1 18s infinite}
-@keyframes float1{50%{transform:translate(60px,40px) scale(1.08)}}
-@keyframes float2{50%{transform:translate(-50px,-30px) scale(1.05)}}
-.star{position:absolute;width:3px;height:3px;background:#fff;border-radius:50%;animation:tw 4s infinite;opacity:.5}
-@keyframes tw{0%,100%{opacity:.2;transform:scale(1)}50%{opacity:1;transform:scale(1.4)}}
-nav{position:sticky;top:0;z-index:50;backdrop-filter:blur(14px);background:#07081ad9;border-bottom:1px solid var(--line)}
+
+/* мягкий фон без «коробок» */
+.scene{position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none;background:var(--bg)}
+.g{position:absolute;border-radius:50%;filter:blur(120px);opacity:.28}
+.g1{width:600px;height:600px;background:#4b36d6;top:-160px;left:-140px}
+.g2{width:540px;height:540px;background:#126e8f;top:25%;right:-160px}
+.g3{width:500px;height:500px;background:#8f2250;bottom:-140px;left:30%}
+
+/* nav */
+nav{position:sticky;top:0;z-index:50;backdrop-filter:blur(12px);background:#0a0c20e6;border-bottom:1px solid var(--line)}
 .nav-in{display:flex;align-items:center;gap:22px;padding:15px 22px;max-width:1180px;margin:0 auto}
 .logo{display:flex;align-items:center;gap:11px;font-weight:800;font-size:20px}
-.logo-badge{width:38px;height:38px;border-radius:12px;background:conic-gradient(from 0deg,var(--gr1),var(--gr2),var(--gr3),var(--gr1));display:flex;align-items:center;justify-content:center;box-shadow:0 0 22px #7c5cff88;animation:spin 8s linear infinite}
+.logo-badge{width:38px;height:38px;border-radius:12px;background:conic-gradient(from 0deg,var(--gr1),var(--gr2),var(--gr3),var(--gr1));display:flex;align-items:center;justify-content:center;box-shadow:0 0 22px #7c5cff66;animation:spin 8s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 .logo-badge span{background:#0a0c1e;border-radius:9px;width:30px;height:30px;display:flex;align-items:center;justify-content:center;font-size:17px;animation:spinRev 8s linear infinite}
 @keyframes spinRev{to{transform:rotate(-360deg)}}
@@ -94,56 +94,52 @@ nav{position:sticky;top:0;z-index:50;backdrop-filter:blur(14px);background:#0708
 .menu a:hover{color:#fff}
 .tg-login{margin-left:8px;min-width:186px;min-height:40px;display:flex;align-items:center}
 @media(max-width:760px){.menu{display:none}}
+
 h2{font-size:clamp(26px,4vw,38px);font-weight:800;margin-bottom:10px}
-.grad{background:linear-gradient(90deg,var(--gr1),var(--gr2),var(--gr3));-webkit-background-clip:text;background-clip:text;color:transparent}
+.grad{background:linear-gradient(90deg,var(--gr1),var(--gr2));-webkit-background-clip:text;background-clip:text;color:transparent}
 .sub{color:var(--mut);max-width:640px;margin:0 auto 34px;font-size:16px}
-section{padding:74px 0;position:relative;z-index:2}
+section{padding:72px 0;position:relative;z-index:2}
 .center{text-align:center}
-.hero{padding:100px 0 80px}
-.hero h1{font-size:clamp(34px,6vw,60px);font-weight:900;line-height:1.06;margin-bottom:20px}
+
+/* hero */
+.hero{padding:96px 0 80px}
+.hero h1{font-size:clamp(34px,6vw,58px);font-weight:900;line-height:1.08;margin-bottom:20px}
 .hero p{color:var(--mut);font-size:19px;max-width:620px;margin:0 auto 28px}
 .hero-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
-.cta{display:inline-flex;align-items:center;gap:10px;padding:16px 34px;border-radius:18px;background:linear-gradient(90deg,var(--gr1),var(--gr2));font-weight:800;font-size:17px;box-shadow:0 0 34px #7c5cff66;transition:.3s;cursor:pointer;border:none;color:#fff}
-.cta:hover{transform:translateY(-3px);box-shadow:0 0 50px #22d3ee88}
+.cta{display:inline-flex;align-items:center;gap:10px;padding:16px 34px;border-radius:18px;background:linear-gradient(90deg,var(--gr1),var(--gr2));font-weight:800;font-size:17px;box-shadow:0 0 34px #7c5cff55;transition:.3s;cursor:pointer;border:none;color:#fff}
+.cta:hover{transform:translateY(-3px);box-shadow:0 0 50px #22d3ee66}
 .cta.ghost{background:transparent;border:1px solid var(--line);box-shadow:none}
 .cta.ghost:hover{border-color:var(--gr2);box-shadow:0 0 30px #22d3ee33}
 .pill{display:inline-flex;gap:8px;align-items:center;padding:8px 16px;border-radius:999px;border:1px solid var(--line);background:#0a0c1fd9;color:var(--mut);font-size:13.5px;margin-bottom:22px}
 .pill b{color:var(--ok)}
+
 .grid{display:grid;gap:18px}
 .g3{grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
 .g4{grid-template-columns:repeat(auto-fit,minmax(170px,1fr))}
-.card{background:var(--card);border:1px solid var(--line);border-radius:28px;padding:26px;transition:.3s}
-.card:hover{transform:translateY(-5px);border-color:#2c3560;box-shadow:0 18px 50px #0007}
+.card{background:var(--card);border:1px solid var(--line);border-radius:26px;padding:26px;transition:.3s}
+.card:hover{transform:translateY(-4px);border-color:#2f3a6e;box-shadow:0 18px 50px #00000066}
 .card .k{font-size:34px;margin-bottom:12px}
 .card h3{font-size:18px;margin-bottom:8px}
 .card p{color:var(--mut);font-size:14px;line-height:1.5}
 .country{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:12px 14px;transition:.3s}
-.country:hover{transform:translateY(-3px);border-color:#2c3560}
+.country:hover{transform:translateY(-3px);border-color:#2f3a6e}
 .country .fl{font-size:26px}
 .country .nm{font-weight:700;font-size:14px}
 .dot{width:9px;height:9px;border-radius:50%;margin-left:auto}
 .dot.on{background:var(--ok);box-shadow:0 0 10px var(--ok);animation:pulse 2s infinite}
-.dot.off{background:var(--off);box-shadow:0 0 8px var(--off)}
 @keyframes pulse{50%{opacity:.4}}
-.plan{position:relative;background:var(--card);border:1px solid var(--line);border-radius:30px;padding:28px;text-align:center;transition:.3s}
-.plan.hot{border:1px solid var(--gr1);box-shadow:0 0 40px #7c5cff44}
+.plan{position:relative;background:var(--card);border:1px solid var(--line);border-radius:28px;padding:28px;text-align:center;transition:.3s}
+.plan.hot{border:1px solid var(--gr1);box-shadow:0 0 40px #7c5cff33}
 .plan .badge{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:linear-gradient(90deg,var(--gr1),var(--gr2));padding:6px 14px;border-radius:999px;font-size:12px;font-weight:800;white-space:nowrap}
 .plan .price{font-size:40px;font-weight:900;margin:16px 0 4px}
 .plan .stars{color:var(--gr2);font-size:18px;font-weight:700;margin-bottom:14px}
 .plan ul{list-style:none;text-align:left;color:var(--mut);font-size:14px;display:flex;flex-direction:column;gap:9px;margin:18px 0}
 .plan li::before{content:'✓ ';color:var(--ok);font-weight:800}
 .btn{display:block;width:100%;padding:14px;border-radius:16px;border:none;cursor:pointer;font-weight:800;font-size:15px;color:#fff;background:linear-gradient(90deg,var(--gr1),var(--gr2));transition:.3s}
-.btn:hover{transform:translateY(-2px);box-shadow:0 0 30px #7c5cff66}
+.btn:hover{transform:translateY(-2px);box-shadow:0 0 30px #7c5cff55}
 .switch{display:inline-flex;gap:4px;background:#0a0c1fd9;border:1px solid var(--line);border-radius:999px;padding:5px;margin-bottom:30px}
 .switch button{padding:10px 22px;border-radius:999px;border:none;background:transparent;color:var(--mut);font-weight:700;cursor:pointer;font-size:14px;transition:.3s}
 .switch button.on{background:linear-gradient(90deg,var(--gr1),var(--gr2));color:#fff}
-.ip-box{max-width:480px;margin:0 auto;background:var(--card);border:1px solid var(--line);border-radius:28px;padding:30px;text-align:center}
-.ip-addr{font-size:22px;font-weight:800;margin:14px 0}
-.badge-ip{display:inline-flex;gap:8px;padding:9px 16px;border-radius:999px;font-weight:800;font-size:14px}
-.badge-ip.safe{background:#0d2b20;color:var(--ok);border:1px solid var(--ok)}
-.badge-ip.warn{background:#2b1218;color:var(--off);border:1px solid var(--off)}
-.scanline{height:3px;width:100%;border-radius:3px;background:linear-gradient(90deg,transparent,var(--gr2),transparent);background-size:200% 100%;animation:scan 1.2s linear infinite;margin:16px 0;display:none}
-@keyframes scan{to{background-position:-200% 0}}
 .marquee{overflow:hidden;position:relative;padding:12px 0}
 .mq-track{display:flex;gap:18px;width:max-content;animation:mq 30s linear infinite}
 @keyframes mq{to{transform:translateX(-50%)}}
@@ -152,8 +148,8 @@ section{padding:74px 0;position:relative;z-index:2}
 .review p{color:var(--mut);font-size:13.5px;margin:10px 0;line-height:1.5}
 .review .who{font-size:13px;font-weight:700}
 .step{text-align:center}
-.step .n{width:56px;height:56px;border-radius:50%;background:linear-gradient(90deg,var(--gr1),var(--gr2));display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:900;margin:0 auto 14px;box-shadow:0 0 26px #7c5cff55}
-.calc{max-width:560px;margin:0 auto;background:var(--card);border:1px solid var(--line);border-radius:28px;padding:30px;text-align:center}
+.step .n{width:56px;height:56px;border-radius:50%;background:linear-gradient(90deg,var(--gr1),var(--gr2));display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:900;margin:0 auto 14px;box-shadow:0 0 26px #7c5cff44}
+.calc{max-width:560px;margin:0 auto;background:var(--card);border:1px solid var(--line);border-radius:26px;padding:30px;text-align:center}
 input[type=range]{width:100%;accent-color:var(--gr1);margin:18px 0}
 .calc-res{font-size:26px;font-weight:900;margin-top:10px}
 .calc .save{color:var(--ok);font-weight:800}
@@ -165,20 +161,20 @@ input[type=range]{width:100%;accent-color:var(--gr1);margin:18px 0}
 .faq-a{max-height:0;overflow:hidden;transition:max-height .35s;padding:0 22px;color:var(--mut);font-size:14.5px;line-height:1.6}
 .faq-item.open .faq-a{max-height:300px;padding-bottom:18px}
 .faq-item.open .ar{transform:rotate(180deg)}
-.cabinet{max-width:520px;margin:0 auto;background:var(--card);border:1px solid var(--line);border-radius:28px;padding:30px;text-align:center}
+.cabinet{max-width:520px;margin:0 auto;background:var(--card);border:1px solid var(--line);border-radius:26px;padding:30px;text-align:center}
 .avatar{width:76px;height:76px;border-radius:50%;margin:0 auto 14px;background:linear-gradient(90deg,var(--gr1),var(--gr2));display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:900;color:#fff}
 .cab-msg{padding:14px;border-radius:16px;margin-top:16px;font-weight:700;font-size:15px}
 .cab-msg.no{background:#2b1218;color:var(--off);border:1px solid var(--off)}
 .cab-msg.yes{background:#0d2b20;color:var(--ok);border:1px solid var(--ok)}
 .cab-hidden{display:none}
 .login-note{color:var(--mut);font-size:13px;margin-top:12px}
-footer{background:#07081ad9;border-top:1px solid var(--line);padding:40px 0;position:relative;z-index:2}
+footer{background:#0a0c20;border-top:1px solid var(--line);padding:40px 0;position:relative;z-index:2}
 .foot{display:flex;flex-wrap:wrap;gap:20px;justify-content:space-between;align-items:center;max-width:1180px;margin:0 auto;padding:0 22px}
 .foot a{color:var(--mut);font-size:14px}
 .foot a:hover{color:#fff}
-.news-tick{overflow:hidden;border-top:1px solid var(--line);background:#0a0c1e;padding:10px 0;position:relative;z-index:2}
+.news-tick{overflow:hidden;border-top:1px solid var(--line);background:#0a0c20;padding:10px 0;position:relative;z-index:2}
 .news-track{display:flex;gap:50px;width:max-content;animation:mq 22s linear infinite;color:var(--mut);font-size:13.5px}
-.float-btn{position:fixed;bottom:26px;right:26px;z-index:60;width:62px;height:62px;border-radius:50%;background:linear-gradient(135deg,var(--gr1),var(--gr3));display:flex;align-items:center;justify-content:center;font-size:26px;cursor:pointer;box-shadow:0 8px 30px #ff3d8188;animation:bounce 2s infinite}
+.float-btn{position:fixed;bottom:26px;right:26px;z-index:60;width:62px;height:62px;border-radius:50%;background:linear-gradient(135deg,var(--gr1),var(--gr3));display:flex;align-items:center;justify-content:center;font-size:26px;cursor:pointer;box-shadow:0 8px 30px #ff5c8a77;animation:bounce 2s infinite}
 @keyframes bounce{50%{transform:translateY(-6px)}}
 .float-menu{position:fixed;bottom:100px;right:26px;z-index:60;display:none;flex-direction:column;gap:8px}
 .float-menu.open{display:flex}
@@ -236,8 +232,7 @@ def index_html():
     return R("""<!DOCTYPE html><html lang="ru"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>__SITE__ — защита за 1 минуту</title>"""+HEAD+"""</head><body>
-<div class="scene"><div class="g g1"></div><div class="g g2"></div><div class="g g3"></div>
-<script>for(let i=0;i<45;i++){let s=document.createElement('div');s.className='star';s.style.left=Math.random()*100+'%';s.style.top=Math.random()*100+'%';s.style.animationDelay=Math.random()*4+'s';document.querySelector('.scene').appendChild(s)}</script></div>
+<div class="scene"><div class="g g1"></div><div class="g g2"></div><div class="g g3"></div></div>
 <nav><div class="nav-in"><a class="logo" href="/"><div class="logo-badge"><span>🛡</span></div>__SITE__</a>
 <div class="menu"><a href="#features">Возможности</a><a href="#countries">Страны</a><a href="#plans">Тарифы</a><a href="#cabinet">Кабинет</a><a href="#faq">FAQ</a></div>
 <div class="tg-login" id="tg-login"></div></div></nav>
@@ -270,15 +265,6 @@ def index_html():
 <div class="grid g4">"""+countries_html()+"""</div>
 <div class="center" style="margin-top:26px"><a class="cta" href="__BOT__">Получить доступ в боте</a></div>
 </div></section>
-
-<!-- ПРОВЕРКА IP -->
-<section><div class="wrap">
-<div class="center"><h2 class="grad">Проверь свой IP</h2><p class="sub">Узнай, защищено ли твоё соединение прямо сейчас</p></div>
-<div class="ip-box"><div class="scanline" id="scanline"></div>
-<div class="ip-addr" id="ipaddr">—</div>
-<button class="btn" id="ipbtn" style="display:inline-block;width:auto;padding:12px 26px">Проверить мой IP</button>
-<div style="margin-top:16px"><span class="badge-ip warn" id="ipbadge">⏳ Статус неизвестен</span></div>
-</div></div></section>
 
 <!-- КАК ПОДКЛЮЧИТЬСЯ -->
 <section><div class="wrap">
@@ -388,10 +374,6 @@ var map={1:[139,98,0],2:[278,196,0],3:[249,175,89],6:[519,364,297]};
 r.addEventListener('input',function(){var m=map[r.value];cv.textContent=(r.value==='6'?'6 месяцев':r.value+' месяц(а)');
 cp.textContent=m[0]+'₽';cs.textContent=m[1]+'⭐';sv.textContent=m[2]>0?('Вы экономите '+m[2]+'₽ против помесячной оплаты!'):'Помесячная оплата без скидки';});})();
 (function(){var el=document.getElementById('counter'),target=12847,t=0;var iv=setInterval(function(){t+=Math.ceil(target/80);if(t>=target){t=target;clearInterval(iv)}el.textContent=t.toLocaleString('ru-RU');},30);})();
-document.getElementById('ipbtn').addEventListener('click',function(){var sl=document.getElementById('scanline'),ad=document.getElementById('ipaddr'),bg=document.getElementById('ipbadge');
-sl.style.display='block';ad.textContent='Сканируем…';bg.textContent='⏳ Проверка…';bg.className='badge-ip warn';
-setTimeout(function(){sl.style.display='none';var ok=Math.random()>.5;ad.textContent='185.64.'+Math.floor(Math.random()*255)+'.'+Math.floor(Math.random()*255);
-if(ok){bg.textContent='🛡️ Ваш IP защищён';bg.className='badge-ip safe'}else{bg.textContent='⚠️ Не защищено — включите VPN';bg.className='badge-ip warn'}},1800);});
 document.querySelectorAll('.faq-q').forEach(function(q){q.addEventListener('click',function(){q.parentElement.classList.toggle('open')})});
 document.getElementById('fbtn').addEventListener('click',function(){document.getElementById('fmenu').classList.toggle('open')});
 var revs=[['Дмитрий','Скорость огонь, подключается за секунду!'],['Анна','Наконец-то работаю безопасно из кафе.'],['Игорь','Простая настройка, всё за 1 минуту.'],['Мария','Лучший VPN, что пробовала.'],['Сергей','Поддержка отвечает мгновенно.']];
